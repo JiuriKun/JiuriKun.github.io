@@ -344,7 +344,7 @@ function shareText(score) {
     if (score <= 49) return '不会玩？卡Q因来帮你！';
     if (score <= 149) return 'Rerorero';
     if (score <= 199) return '您';
-    return '人？';
+    return '您是用了砸瓦鲁多？？';
 }
 
 function toStr(obj) {

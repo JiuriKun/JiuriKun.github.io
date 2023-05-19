@@ -343,7 +343,7 @@ function shareText(score) {
     SubmitResults();
     if (score <= 49) return '不会玩？卡Q因来帮你！';
     if (score <= 149) return 'Rerorero';
-    if (score <= 199) return '您';
+    if (score <= 199) return '卡Q因都自愧不如！';
     return '您是用了砸瓦鲁多？？';
 }
 

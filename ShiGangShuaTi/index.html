@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>中国近现代史纲要 · 刷题</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f0f2f5;
+            color: #1a1a2e;
+            padding: 0 0 80px 0;
+            min-height: 100vh;
+        }
+        .app-header {
+            background: linear-gradient(135deg, #8B0000, #5a0000);
+            color: #fff;
+            padding: 16px 20px 14px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+        }
+        .app-header h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .app-header .sub {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-top: 2px;
+            font-weight: 400;
+        }
+
+        .mode-tabs {
+            display: flex;
+            background: #fff;
+            border-bottom: 1px solid #e8ecf1;
+            position: sticky;
+            top: 68px;
+            z-index: 99;
+            background: #f8f9fc;
+            padding: 6px 12px;
+            gap: 6px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+        }
+        .mode-tab {
+            flex: 1;
+            text-align: center;
+            padding: 10px 0;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #6b7280;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: all 0.25s;
+            letter-spacing: 0.3px;
+            touch-action: manipulation;
+        }
+        .mode-tab:active {
+            transform: scale(0.96);
+        }
+        .mode-tab.active {
+            background: #8B0000;
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(139, 0, 0, 0.3);
+        }
+
+        .container {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 16px 16px 20px;
+        }
+
+        .progress-bar-wrap {
+            background: #e8ecf1;
+            border-radius: 20px;
+            height: 6px;
+            overflow: hidden;
+            margin-bottom: 14px;
+            position: relative;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8B0000, #c0392b);
+            border-radius: 20px;
+            transition: width 0.4s ease;
+            width: 0%;
+        }
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 6px;
+        }
+        .progress-text .num {
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 18px;
+            padding: 22px 20px 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            margin-bottom: 16px;
+            transition: all 0.2s;
+        }
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #8B0000;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .card-title .badge {
+            background: #8B0000;
+            color: #fff;
+            font-size: 11px;
+            padding: 1px 10px;
+            border-radius: 30px;
+            font-weight: 500;
+        }
+        .question-text {
+            font-size: 17px;
+            line-height: 1.8;
+            font-weight: 500;
+            color: #1a1a2e;
+            margin-bottom: 18px;
+            word-break: break-word;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .option-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 16px;
+            background: #f8f9fc;
+            border-radius: 12px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            touch-action: manipulation;
+            font-size: 15px;
+            line-height: 1.6;
+            color: #1a1a2e;
+        }
+        .option-item:active {
+            transform: scale(0.98);
+        }
+        .option-item .label {
+            font-weight: 700;
+            color: #6b7280;
+            flex-shrink: 0;
+            min-width: 22px;
+        }
+        .option-item .text {
+            flex: 1;
+        }
+        .option-item.selected {
+            border-color: #8B0000;
+            background: #fde8e8;
+        }
+        .option-item.correct {
+            border-color: #22c55e;
+            background: #e6f9ed;
+        }
+        .option-item.correct .label {
+            color: #22c55e;
+        }
+        .option-item.wrong {
+            border-color: #ef4444;
+            background: #fde8e8;
+        }
+        .option-item.wrong .label {
+            color: #ef4444;
+        }
+        .option-item.reveal-correct {
+            border-color: #22c55e;
+            background: #e6f9ed;
+        }
+        .option-item.reveal-correct .label {
+            color: #22c55e;
+        }
+        .option-item.disabled {
+            cursor: default;
+            opacity: 0.7;
+        }
+        .option-item.disabled:active {
+            transform: none;
+        }
+
+        .feedback {
+            margin-top: 16px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            background: #f8f9fc;
+            border-left: 4px solid #8B0000;
+            display: none;
+        }
+        .feedback.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        .feedback .result-label {
+            font-weight: 700;
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+        .feedback .result-label .icon {
+            margin-right: 6px;
+        }
+        .feedback .correct-answer {
+            font-size: 14px;
+            color: #22c55e;
+            font-weight: 600;
+        }
+        .feedback .explanation {
+            font-size: 14px;
+            color: #4b5563;
+            margin-top: 6px;
+            line-height: 1.7;
+        }
+        .feedback.correct {
+            border-left-color: #22c55e;
+            background: #f0fdf4;
+        }
+        .feedback.correct .result-label {
+            color: #22c55e;
+        }
+        .feedback.wrong {
+            border-left-color: #ef4444;
+            background: #fef2f2;
+        }
+        .feedback.wrong .result-label {
+            color: #ef4444;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 18px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            flex: 1;
+            min-width: 80px;
+            padding: 14px 10px;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            touch-action: manipulation;
+            text-align: center;
+            background: #e8ecf1;
+            color: #4b5563;
+        }
+        .btn:active {
+            transform: scale(0.96);
+        }
+        .btn-primary {
+            background: #8B0000;
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(139, 0, 0, 0.25);
+        }
+        .btn-primary:active {
+            background: #6b0000;
+        }
+        .btn-primary:disabled {
+            opacity: 0.5;
+            transform: none;
+            box-shadow: none;
+        }
+        .btn-success {
+            background: #22c55e;
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.25);
+        }
+        .btn-success:active {
+            background: #16a34a;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #8B0000;
+            color: #8B0000;
+        }
+        .btn-outline:active {
+            background: #8B000010;
+        }
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+        }
+        .btn-secondary:active {
+            background: #e5e7eb;
+        }
+        .btn-danger {
+            background: #dc2626;
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+        }
+        .btn-danger:active {
+            background: #b91c1c;
+        }
+
+        .result-summary {
+            text-align: center;
+            padding: 24px 0 12px;
+        }
+        .result-summary .score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8B0000, #5a0000);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            box-shadow: 0 8px 30px rgba(139, 0, 0, 0.3);
+        }
+        .result-summary .score-circle .big {
+            font-size: 38px;
+            font-weight: 800;
+            line-height: 1;
+        }
+        .result-summary .score-circle .small {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+        .result-summary .msg {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+        .result-summary .sub-msg {
+            font-size: 14px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        .result-item {
+            background: #f8f9fc;
+            border-radius: 14px;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid #e8ecf1;
+        }
+        .result-item.correct-item {
+            border-left-color: #22c55e;
+            background: #f0fdf4;
+        }
+        .result-item.wrong-item {
+            border-left-color: #ef4444;
+            background: #fef2f2;
+        }
+        .result-item .q {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1a1a2e;
+            margin-bottom: 4px;
+            line-height: 1.6;
+        }
+        .result-item .ans {
+            font-size: 13px;
+            color: #4b5563;
+        }
+        .result-item .ans .user-ans {
+            font-weight: 600;
+        }
+        .result-item .ans .user-ans.correct-text {
+            color: #22c55e;
+        }
+        .result-item .ans .user-ans.wrong-text {
+            color: #ef4444;
+        }
+        .result-item .exp {
+            font-size: 13px;
+            color: #6b7280;
+            margin-top: 4px;
+            line-height: 1.6;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6b7280;
+        }
+        .empty-state .icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+        .empty-state p {
+            font-size: 16px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .mt-2 {
+            margin-top: 8px;
+        }
+        .mt-3 {
+            margin-top: 16px;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .gap-2 {
+            gap: 8px;
+        }
+
+        .quiz-progress {
+            font-size: 13px;
+            color: #6b7280;
+            text-align: center;
+            padding: 6px 0 10px;
+            font-weight: 500;
+        }
+        .quiz-progress span {
+            color: #8B0000;
+            font-weight: 700;
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c4c8d4;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 12px 12px 20px;
+            }
+            .card {
+                padding: 18px 16px 16px;
+            }
+            .question-text {
+                font-size: 16px;
+            }
+            .option-item {
+                padding: 11px 14px;
+                font-size: 14px;
+            }
+            .mode-tab {
+                font-size: 13px;
+                padding: 8px 0;
+            }
+            .app-header h1 {
+                font-size: 18px;
+            }
+            .result-summary .score-circle {
+                width: 100px;
+                height: 100px;
+            }
+            .result-summary .score-circle .big {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-header">
+        <h1>📜 中国近现代史纲要</h1>
+        <div class="sub">60题 · 三种刷题模式</div>
+    </div>
+
+    <div class="mode-tabs" id="modeTabs">
+        <button class="mode-tab active" data-mode="order">📋 顺序</button>
+        <button class="mode-tab" data-mode="random">🎲 乱序</button>
+        <button class="mode-tab" data-mode="quiz">📝 模拟测验</button>
+    </div>
+
+    <div class="container" id="appContainer"></div>
+
+    <script>
+        // ======================== 题库数据 ========================
+        const QUESTIONS = [{
+            id: 1,
+            q: '一百年来，中国共产党团结带领中国人民进行的一切奋斗、一切牺牲、一切创造，归结起来就是一个主题（  ）。',
+            opts: ['A. 人民幸福、国家富强', 'B. 实现中华民族伟大复兴', 'C. 民族独立、人民解放',
+                'D. 推翻封建主义和帝国主义双重压迫'
+            ],
+            ans: 1,
+            exp: '习近平总书记在"七一"重要讲话中指出，一百年来中国共产党的一切奋斗、牺牲和创造，归结起来就是一个主题：实现中华民族伟大复兴。'
+        }, {
+            id: 2,
+            q: '近代中国诞生的新兴的被压迫阶级是（  ）。',
+            opts: ['A. 资产阶级', 'B. 地主阶级', 'C. 工人阶级', 'D. 农民阶级'],
+            ans: 2,
+            exp: '中国工人阶级是近代中国诞生的新兴被压迫阶级，是先进生产力的代表，具有最彻底的革命性，是中国革命的领导力量。'
+        }, {
+            id: 3,
+            q: '资本---帝国主义列强侵略中国的主要目的是（  ）。',
+            opts: ['A. 开拓疆土', 'B. 强迫中国成为其附属国', 'C. 开辟市场', 'D. 掠夺资源'],
+            ans: 1,
+            exp: '资本—帝国主义列强侵略中国的主要目的是强迫中国成为其附属国，通过不平等条约控制中国的政治、经济命脉，使中国沦为半殖民地半封建社会。'
+        }, {
+            id: 4,
+            q: '中国近代史的开端是在（  ）。',
+            opts: ['A. 1919年', 'B. 1949年', 'C. 1915年', 'D. 1840年'],
+            ans: 3,
+            exp: '1840年鸦片战争是中国近代史的开端。鸦片战争后，中国开始从封建社会沦为半殖民地半封建社会，社会性质发生根本变化。'
+        }, {
+            id: 5,
+            q: '中国在半殖民地半封建社会时期，反侵略斗争失败的最根本原因是（  ）。',
+            opts: ['A. 军事装备落后', 'B. 经济技术落后', 'C. 社会制度腐败', 'D. 思想文化保守'],
+            ans: 2,
+            exp: '反侵略斗争失败的最根本原因是社会制度的腐败。清政府的腐败无能、封建专制制度的落后，导致国家无法有效动员和组织人民进行抵抗。'
+        }, {
+            id: 6,
+            q: '太平天国运动不同于以前农民战争的特点是（  ）。',
+            opts: ['A. 有了反封建内容', 'B. 有了反侵略爱国内容', 'C. 有了资产阶级领导', 'D. 有了无产阶级领导'],
+            ans: 1,
+            exp: '太平天国运动不仅反对封建统治，还肩负起反侵略的爱国任务，这是以往农民战争所不具备的新特点，体现了时代的变化。'
+        }, {
+            id: 7,
+            q: '在近代中国，实现国家富强和人民幸福的前提是（  ）。',
+            opts: ['A. 进行实业救国', 'B. 实行资本主义', 'C. 进行西方式的工业革命', 'D. 争取民族独立和人民解放'],
+            ans: 3,
+            exp: '民族独立和人民解放是实现国家富强和人民幸福的前提。只有推翻帝国主义和封建主义的统治，才能为现代化建设创造基本条件。'
+        }, {
+            id: 8,
+            q: '1907年兴起的"庚款兴学"的实质是（  ）。',
+            opts: ['A. 帝国主义文化侵略', 'B. 效法西方社会建设', 'C. 推动近代教育转型', 'D. 促进东西方文化交融'],
+            ans: 0,
+            exp: '"庚款兴学"是帝国主义国家利用庚子赔款在中国兴办学校的活动，其本质是文化侵略，旨在培养为帝国主义服务的代理人。'
+        }, {
+            id: 9,
+            q: '维新变法时期，维新派提出的政治主张是（  ）。',
+            opts: ['A. 宪政民主', 'B. 民主共和', 'C. 人民民主', 'D. 君主立宪'],
+            ans: 3,
+            exp: '维新派主张在中国实行君主立宪制，即在保留君主的前提下，建立议会制度，实行宪政改革，这是维新变法的核心政治主张。'
+        }, {
+            id: 10,
+            q: '中国近代史上提出"以中国之伦常名教为原本，辅以诸国富强之术"之说的思想家是（  ）。',
+            opts: ['A. 李鸿章', 'B. 左宗棠', 'C. 冯桂芬', 'D. 张之洞'],
+            ans: 2,
+            exp: '冯桂芬在《校邠庐抗议》中提出"以中国之伦常名教为原本，辅以诸国富强之术"，成为洋务运动"中体西用"思想的重要来源。'
+        }, {
+            id: 11,
+            q: '近代中国首先喊出"振兴中华"口号的人是（  ）。',
+            opts: ['A. 孙中山', 'B. 林则徐', 'C. 严复', 'D. 康有为'],
+            ans: 0,
+            exp: '孙中山在1894年兴中会成立时提出"振兴中华"的口号，成为中国近代民族复兴思想的重要标志，激励了无数仁人志士。'
+        }, {
+            id: 12,
+            q: '近代中国第一个领导资产阶级革命的全国性政党是（  ）。',
+            opts: ['A. 兴中会', 'B. 中华革命党', 'C. 光复会', 'D. 中国同盟会'],
+            ans: 3,
+            exp: '1905年成立的中国同盟会是近代中国第一个全国性的资产阶级革命政党，以"驱除鞑虏，恢复中华，创立民国，平均地权"为纲领。'
+        }, {
+            id: 13,
+            q: '提出"建设有中国特色的社会主义"重大命题的会议是（  ）。',
+            opts: ['A. 中共八大', 'B. 中共十三大', 'C. 中共十四大', 'D. 中共十二大'],
+            ans: 3,
+            exp: '1982年中共十二大，邓小平首次提出"建设有中国特色的社会主义"这一重大命题，标志着中国特色社会主义理论的正式形成。'
+        }, {
+            id: 14,
+            q: '改革开放以来，党的全部理论与实践的主题是（  ）。',
+            opts: ['A. 民族独立', 'B. 为人民谋和平', 'C. 国家富强', 'D. 中国特色社会主义'],
+            ans: 3,
+            exp: '改革开放以来，党的全部理论和实践的主题是中国特色社会主义，这是改革开放和现代化建设的根本方向。'
+        }, {
+            id: 15,
+            q: '标志着国民党政权在大陆统治覆灭的重大事件是（  ）。',
+            opts: ['A. 1949年上海解放', 'B. 1949年南京解放', 'C. 1949年河北解放', 'D. 1949年北平解放'],
+            ans: 1,
+            exp: '1949年4月23日南京解放，标志着国民党22年在大陆统治的覆灭，是中国人民解放军在解放战争中的重大胜利。'
+        }, {
+            id: 16,
+            q: '1946年6月26日，国民党军队挑起全国性内战的起点是大举进攻（  ）。',
+            opts: ['A. 东北解放区', 'B. 中原解放区', 'C. 陕北解放区', 'D. 山东解放区'],
+            ans: 1,
+            exp: '1946年6月26日，国民党军队以22万人进攻中原解放区，标志着全面内战的爆发，是解放战争的开端。'
+        }, {
+            id: 17,
+            q: '中国共产党从大革命失败到土地革命战争兴起的转折是（  ）。',
+            opts: ['A. 南昌起义', 'B. 三湾改编', 'C. 八七会议', 'D. 古田会议'],
+            ans: 2,
+            exp: '1927年8月7日的八七会议是中国共产党从大革命失败到土地革命战争兴起的历史性转折，确定了土地革命和武装斗争的方针。'
+        }, {
+            id: 18,
+            q: '中国共产党独立领导革命战争和创建人民军队的开始是（  ）。',
+            opts: ['A. 南昌起义', 'B. 古田会议', 'C. 秋收起义', 'D. 广州起义'],
+            ans: 0,
+            exp: '1927年8月1日南昌起义，打响了武装反抗国民党反动派的第一枪，标志着中国共产党独立领导革命战争和创建人民军队的开始。'
+        }, {
+            id: 19,
+            q: '中华苏维埃共和国实行的制度是（  ）。',
+            opts: ['A. 人民代表大会制度', 'B. 农民代表大会制度', 'C. 工农兵代表大会制度', 'D. 政治协商制度'],
+            ans: 2,
+            exp: '中华苏维埃共和国实行工农兵代表大会制度，体现了工农民主专政的性质，是中国共产党在革命根据地进行政权建设的重要尝试。'
+        }, {
+            id: 20,
+            q: '抗战胜利后，蒋介石电邀毛泽东到重庆谈判的真正目的是（  ）。',
+            opts: ['A. 向解放区发动重点进攻', 'B. 讨论和平建国方案', 'C. 为发动内战争取时间', 'D. 建设独立、自由和富强的新中国'],
+            ans: 2,
+            exp: '蒋介石邀请毛泽东到重庆谈判的真正目的是为发动内战争取时间，同时将内战责任推给中国共产党。'
+        }, {
+            id: 21,
+            q: '1945年8月25日，中共中央在《对目前时局的宣言》中明确提出的口号是（  ）。',
+            opts: ['A. 抗战、团结、进步', 'B. 和平、民主、团结', 'C. 向北发展、向南防御', 'D. 打倒蒋介石、解放全中国'],
+            ans: 1,
+            exp: '1945年8月25日，中共中央发表《对目前时局的宣言》，明确提出"和平、民主、团结"三大口号，表达了争取和平民主的诚意。'
+        }, {
+            id: 22,
+            q: '1928年，蒋介石在南京建立的国民党政府的统治依然是（  ）。',
+            opts: ['A. 民族资产阶级统治', 'B. 官僚资产阶级统治', 'C. 地主阶级统治',
+                'D. 地主阶级和买办性的大资产阶级的统治'
+            ],
+            ans: 3,
+            exp: '1928年建立的南京国民政府，本质上是地主阶级和买办性的大资产阶级的统治，不代表民族资产阶级和人民的利益。'
+        }, {
+            id: 23,
+            q: '1948年9月12日，中国人民解放军发动的战略决战战役是（  ）。',
+            opts: ['A. 济南战役', 'B. 辽沈战役', 'C. 淮海战役', 'D. 平津战役'],
+            ans: 1,
+            exp: '1948年9月12日，辽沈战役打响，是解放战争中三大战役的第一个，历时52天，歼敌47万余人，解放了东北全境。'
+        }, {
+            id: 24,
+            q: '规定党在全国胜利后政治经济外交方面基本政策的会议是（  ）。',
+            opts: ['A. 中共七届二中全会', 'B. 中共六届六中全会', 'C. 中共七届三中全会', 'D. 政治协商会议'],
+            ans: 0,
+            exp: '1949年3月中共七届二中全会，规定了党在全国胜利后在政治、经济、外交等方面的基本政策，确定了工作重心由农村转向城市。'
+        }, {
+            id: 25,
+            q: '新中国的政体是（  ）。',
+            opts: ['A. 中国共产党领导的多党合作和政治协商制度', 'B. 人民代表大会制度', 'C. 人民民主专政',
+                'D. 民族区域自治制度'
+            ],
+            ans: 1,
+            exp: '人民代表大会制度是中华人民共和国的根本政治制度，是我国的政体，体现了人民民主专政的国家性质。'
+        }, {
+            id: 26,
+            q: '党政军民学，东西南北中，（  ），是最高的政治领导力量。',
+            opts: ['A. 党是领导一切的', 'B. 工农联盟', 'C. 人民就是江山', 'D. 多党合作'],
+            ans: 0,
+            exp: '党是领导一切的，这是中国特色社会主义最本质的特征，党是最高政治领导力量，在党和国家事业中发挥总揽全局、协调各方的作用。'
+        }, {
+            id: 27,
+            q: '近代中国社会中最革命的阶级是（  ）。',
+            opts: ['A. 工人阶级', 'B. 小资产阶级', 'C. 民族资产阶级', 'D. 农民阶级'],
+            ans: 0,
+            exp: '工人阶级是近代中国社会中最革命的阶级，因为受压迫最深、组织性最强、与先进生产方式相联系，是中国革命的领导力量。'
+        }, {
+            id: 28,
+            q: '从鸦片战争开始，到1949年中华人民共和国成立之前的近代中国都属于（  ）。',
+            opts: ['A. 封建社会', 'B. 半殖民地半封建社会', 'C. 旧民主主义社会', 'D. 新民主主义社会'],
+            ans: 1,
+            exp: '从1840年鸦片战争到1949年新中国成立，中国社会性质是半殖民地半封建社会，帝国主义和封建主义是压在中国人民头上的两座大山。'
+        }, {
+            id: 29,
+            q: '资本-帝国主义列强对中国的侵略，首先和主要的是进行（  ）。',
+            opts: ['A. 经济掠夺', 'B. 文化渗透', 'C. 军事侵略', 'D. 政治控制'],
+            ans: 2,
+            exp: '资本-帝国主义列强对中国的侵略首先和主要的是军事侵略，通过发动侵略战争、强迫签订不平等条约，打开中国大门。'
+        }, {
+            id: 30,
+            q: '帝国主义列强没有实现瓜分中国图谋的根本原因是（  ）。',
+            opts: ['A. 帝国主义列强之间的矛盾和互相牵制', 'B. 清政府同列强谈判签约', 'C. 民族资产阶级的奋勇抵抗',
+                'D. 中华民族进行的不屈不挠的反侵略斗争'
+            ],
+            ans: 3,
+            exp: '帝国主义列强没有实现瓜分中国图谋的根本原因是中华民族进行的不屈不挠的反侵略斗争，中国人民的英勇抵抗粉碎了帝国主义的瓜分野心。'
+        }, {
+            id: 31,
+            q: '中国近代历史上第一个比较系统的发展资本主义的方案是（  ）。',
+            opts: ['A. 《资政新篇》', 'B. 《天朝田亩制度》', 'C. 《海国图志》', 'D. 《中华民国临时约法》'],
+            ans: 0,
+            exp: '《资政新篇》是洪仁玕提出的发展资本主义的方案，是近代中国第一个比较系统的资本主义改革方案，具有进步意义。'
+        }, {
+            id: 32,
+            q: '造成近代中国贫穷落后的根本原因是（  ）。',
+            opts: ['A. 资本---帝国主义的侵略', 'B. 中国落后的政治制度', 'C. 中国落后的经济制度', 'D. 统治集团的腐败'],
+            ans: 0,
+            exp: '资本—帝国主义的侵略是造成近代中国贫穷落后的根本原因，帝国主义的掠夺和压迫使中国长期处于落后状态。'
+        }, {
+            id: 33,
+            q: '第二次鸦片战争中，从中国攫取了一百多万平方公里的土地，获利最大的国家是（  ）。',
+            opts: ['A. 英国', 'B. 俄国', 'C. 法国', 'D. 美国'],
+            ans: 1,
+            exp: '第二次鸦片战争期间，俄国通过《瑷珲条约》和《北京条约》等，侵占了中国东北和西北150多万平方公里的领土。'
+        }, {
+            id: 34,
+            q: '（  ）是中国近代史上第一个不平等条约。',
+            opts: ['A. 《望厦条约》', 'B. 《黄埔条约》', 'C. 《北京条约》', 'D. 《南京条约》'],
+            ans: 3,
+            exp: '1842年签订的《南京条约》是中国近代史上第一个不平等条约，标志着中国开始沦为半殖民地半封建社会。'
+        }, {
+            id: 35,
+            q: '太平天国运动失败的根本原因是（  ）。',
+            opts: ['A. 领导集团的内部斗争', 'B. 农民阶级的局限性', 'C. 遭到中外反动势力的联合绞杀', 'D. 战略失误导致北伐失利'],
+            ans: 1,
+            exp: '太平天国失败的根本原因是农民阶级的局限性，农民阶级不代表先进的生产力，缺乏科学的理论指导，无法完成反帝反封建的历史任务。'
+        }, {
+            id: 36,
+            q: '袁世凯为复辟帝制不惜出卖主权，与日本签订了卖国的（  ）。',
+            opts: ['A. "善后大借款"合同', 'B. 中日共同防敌军事协定', 'C. 《中日修好条规》', 'D. "二十一条"'],
+            ans: 3,
+            exp: '1915年袁世凯为换取日本对复辟帝制的支持，与日本签订了丧权辱国的"二十一条"，严重损害了中国主权。'
+        }, {
+            id: 37,
+            q: '在中国近代史上，规定允许外国人在中国投资设厂的条约是（  ）。',
+            opts: ['A. 《南京条约》', 'B. 《北京条约》', 'C. 《马关条约》', 'D. 《天津条约》'],
+            ans: 2,
+            exp: '1895年《马关条约》规定日本可以在中国通商口岸投资设厂，此后列强纷纷效仿，外国资本开始大规模进入中国。'
+        }, {
+            id: 38,
+            q: '洋务运动主张学习西方武器装备和科学技术，他们提出了（  ）的口号。',
+            opts: ['A. 自强、求富', 'B. 中体西用', 'C. 振兴中华', 'D. 师夷长技以制夷'],
+            ans: 0,
+            exp: '洋务运动以"自强"和"求富"为口号，前期以"自强"为主创办军事工业，后期以"求富"为主创办民用工业，学习西方技术。'
+        }, {
+            id: 39,
+            q: '左宗棠开办的近代军事工业是（  ）。',
+            opts: ['A. 湖北织布局', 'B. 继昌隆缫丝厂', 'C. 发昌机器厂', 'D. 福州船政局'],
+            ans: 3,
+            exp: '左宗棠于1866年创办福州船政局，是洋务运动中重要的军事工业之一，以制造舰船和培养海军人才为主。'
+        }, {
+            id: 40,
+            q: '洋务运动未能使中国走上富强道路的根本原因是（  ）。',
+            opts: ['A. 西方列强极力阻碍破坏', 'B. 没有采用资本主义生产管理制度', 'C. 没有触动封建生产关系',
+                'D. 单纯学习西方科技以求自强'
+            ],
+            ans: 2,
+            exp: '洋务运动没有触动封建生产关系，在不改变封建制度的前提下学习西方技术，无法从根本上解决中国的落后问题。'
+        }, {
+            id: 41,
+            q: '中国近代史上第一次资产阶级启蒙运动是（  ）。',
+            opts: ['A. 洋务运动', 'B. 维新运动', 'C. 辛亥革命', 'D. 五四运动'],
+            ans: 1,
+            exp: '维新运动是中国近代史上第一次资产阶级启蒙运动，维新派宣传变法图强、君主立宪等思想，促进了中国人民的思想解放。'
+        }, {
+            id: 42,
+            q: '洋务运动的指导思想是（  ）。',
+            opts: ['A. 西学为体，中学为用', 'B. 新学为体，旧学为用', 'C. 中学为体，西学为用', 'D. 旧学为体，新学为用'],
+            ans: 2,
+            exp: '洋务运动的指导思想是"中学为体，西学为用"，即以中国封建制度为根本，学习西方先进技术，试图在维护封建统治的前提下实现自强。'
+        }, {
+            id: 43,
+            q: '辛亥革命取得的最大成就是（  ）。',
+            opts: ['A. 推翻了封建帝制', 'B. 促进了资本主义的发展', 'C. 使人民获得了一些民主自由权利',
+                'D. 打击了帝国主义殖民势力'
+            ],
+            ans: 0,
+            exp: '辛亥革命的最大成就是推翻了清王朝的封建帝制，结束了中国两千多年的封建君主专制制度，建立了资产阶级共和国。'
+        }, {
+            id: 44,
+            q: '中国历史上第一部具有资产阶级共和国宪法性质的法典是（  ）。',
+            opts: ['A. 《中华民国章程》', 'B. 《钦定宪法大纲》', 'C. 《中华民国临时约法》', 'D. 《中华民国宪法》'],
+            ans: 2,
+            exp: '1912年颁布的《中华民国临时约法》是中国历史上第一部具有资产阶级共和国宪法性质的法典，体现了主权在民、三权分立等原则。'
+        }, {
+            id: 45,
+            q: '辛亥革命成果被袁世凯窃取的标志是（  ）。',
+            opts: ['A. 孙中山辞职，临时政府迁往北京', 'B. 袁世凯就任正式大总统', 'C. 袁世凯颁布《中华民国约法》',
+                'D. 清帝退位'
+            ],
+            ans: 0,
+            exp: '1912年4月，孙中山辞职，临时政府迁往北京，标志着辛亥革命成果被袁世凯窃取，革命果实落入北洋军阀手中。'
+        }, {
+            id: 46,
+            q: '革命派与改良派论战的焦点是（  ）。',
+            opts: ['A. 要不要以革命手段推翻清王朝', 'B. 要不要推翻帝制，实行共和', 'C. 要不要社会革命',
+                'D. 要不要向西方学习'
+            ],
+            ans: 0,
+            exp: '革命派与改良派论战的焦点是要不要以革命手段推翻清王朝，革命派主张暴力革命，改良派主张和平改良，这是两派最根本的分歧。'
+        }, {
+            id: 47,
+            q: '1992年邓小平南方谈话突出解决了（  ）。',
+            opts: ['A. 姓"公"姓"私"的问题', 'B. 姓"资"姓"社"的问题', 'C. 开放和封闭的问题',
+                'D. "两个凡是"的思想误区'
+            ],
+            ans: 1,
+            exp: '1992年邓小平南方谈话突出解决了姓"资"姓"社"的问题，明确提出计划和市场都是经济手段，社会主义的本质是解放和发展生产力。'
+        }, {
+            id: 48,
+            q: '毛泽东提出"两个务必"思想的会议是（  ）。',
+            opts: ['A. 政治协商会议', 'B. 中共七届一中全会', 'C. 中共七届二中全会', 'D. 中共七届三中全会'],
+            ans: 2,
+            exp: '在中共七届二中全会上，毛泽东提出"两个务必"：务必使同志们继续地保持谦虚、谨慎、不骄、不躁的作风，务必使同志们继续地保持艰苦奋斗的作风。'
+        }, {
+            id: 49,
+            q: '党在过渡时期总路线的主要内容概括为（  ）。',
+            opts: ['A. 一化三改', 'B. 一化两翼', 'C. 一体三改', 'D. 一体三翼'],
+            ans: 0,
+            exp: '党在过渡时期的总路线主要内容概括为"一化三改"：实现国家社会主义工业化，对农业、手工业和资本主义工商业进行社会主义改造。'
+        }, {
+            id: 50,
+            q: '（  ）是一个彻底反封建的土地革命纲领。',
+            opts: ['A. 《关于清算、减租及土地问题的指示》', 'B. 《兴国土地法》', 'C. 《中国土地法大纲》',
+                'D. 《井冈山土地法》'
+            ],
+            ans: 2,
+            exp: '1947年《中国土地法大纲》是一个彻底反封建的土地革命纲领，明确提出废除封建剥削土地制度，实行"耕者有其田"。'
+        }, {
+            id: 51,
+            q: '改造资本主义工商业和逐步完成向社会主义过渡的必经之路是（  ）。',
+            opts: ['A. 官僚资本主义', 'B. 私人资本主义', 'C. 国营经济', 'D. 国家资本主义'],
+            ans: 3,
+            exp: '国家资本主义是改造资本主义工商业和逐步完成向社会主义过渡的必经之路，通过国家资本主义形式将资本主义经济逐步纳入社会主义轨道。'
+        }, {
+            id: 52,
+            q: '"须知政权是由枪杆子中取得的。"这句话出自（  ）。',
+            opts: ['A. 中共一大', 'B. 中共二大', 'C. 八七会议', 'D. 瓦窑堡会议'],
+            ans: 2,
+            exp: '在八七会议上，毛泽东提出"须知政权是由枪杆子中取得的"的著名论断，强调了武装斗争在中国革命中的极端重要性。'
+        }, {
+            id: 53,
+            q: '我国在（  ）成功爆炸第一颗原子弹。',
+            opts: ['A. 1964年', 'B. 1973年', 'C. 1952年', 'D. 1987年'],
+            ans: 0,
+            exp: '1964年10月16日，中国成功爆炸第一颗原子弹，成为世界上第五个拥有核武器的国家，极大提升了中国的国际地位。'
+        }, {
+            id: 54,
+            q: '毛泽东提出"一切反动派都是纸老虎"的著名论断是在（  ）。',
+            opts: ['A. 解放战争爆发之初', 'B. 刘邓大军展开战略进攻时', 'C. 国共战略决战之际', 'D. 国民党在大陆统治结束后'],
+            ans: 0,
+            exp: '1946年解放战争爆发之初，毛泽东在接受美国记者安娜·路易斯·斯特朗采访时提出"一切反动派都是纸老虎"的著名论断。'
+        }, {
+            id: 55,
+            q: '1946年5月4日，中共中央发出了决定将减租减息政策改变为"耕者有其田"政策的（  ）。',
+            opts: ['A. 《井冈山土地法》', 'B. 《兴国土地法》', 'C. 《关于清算、减租及土地问题的指示》',
+                'D. 《中国土地法大纲》'
+            ],
+            ans: 2,
+            exp: '1946年5月4日，中共中央发布《关于清算、减租及土地问题的指示》（即"五四指示"），将减租减息政策改为"耕者有其田"政策。'
+        }, {
+            id: 56,
+            q: '中国革命之所以能够走上胜利发展的道路，从根本上说，是由于（  ）。',
+            opts: ['A. 进行土地革命', 'B. 国际无产阶级和人民群众的支持', 'C. 国民党的腐败和领导力丧失',
+                'D. 中国共产党的领导'
+            ],
+            ans: 3,
+            exp: '中国革命的胜利从根本上说是因为中国共产党的领导。中国共产党代表最广大人民的利益，制定正确的革命路线和政策，带领人民取得胜利。'
+        }, {
+            id: 57,
+            q: '中国革命转危为安的关键是（  ）。',
+            opts: ['A. 古田会议的召开', 'B. 井冈山根据地的开辟', 'C. 洛川会议的召开', 'D. 长征的胜利'],
+            ans: 3,
+            exp: '长征的胜利是中国革命转危为安的关键。长征保存了党和红军的骨干力量，使中国革命在极端困难的情况下得以延续和发展。'
+        }, {
+            id: 58,
+            q: '社会主义革命和建设时期，中国共产党的主要任务是（  ）。',
+            opts: ['A. 实现从旧民主主义社会到新民主主义社会的转变', 'B. 实现从新民主主义到社会主义的转变',
+                'C. 实现从半殖民地半封建性质社会到新民主主义社会的转变',
+                'D. 实现从半殖民地半封建社会到社会主义的转变'
+            ],
+            ans: 1,
+            exp: '社会主义革命和建设时期，中国共产党的主要任务是实现从新民主主义到社会主义的转变，通过社会主义改造建立社会主义制度。'
+        }, {
+            id: 59,
+            q: '（  ）提出，国内主要矛盾已经是人民对于经济文化迅速发展的需要同当前经济文化不能满足人民需要的状况之间的矛盾。',
+            opts: ['A. 七届二中全会', 'B. 中共八大', 'C. 十一届六中全会', 'D. 中共六大'],
+            ans: 1,
+            exp: '1956年中共八大正确分析了国内主要矛盾，指出已经是人民对于经济文化迅速发展的需要同当前经济文化不能满足人民需要之间的矛盾。'
+        }, {
+            id: 60,
+            q: '社会主义基本制度在中国确立的标志是（  ）。',
+            opts: ['A. 《论十大关系》的发表', 'B. "双百"方针的提出', 'C. "四个现代化"战略目标的提出',
+                'D. 1956年生产资料所有制改造完成'
+            ],
+            ans: 3,
+            exp: '1956年生产资料所有制的社会主义改造基本完成，标志着社会主义基本制度在中国确立，中国进入社会主义初级阶段。'
+        }];
+
+        // ======================== 应用状态 ========================
+        const state = {
+            mode: 'order',
+            questions: [],
+            currentIndex: 0,
+            answers: [],
+            answered: [],
+            isCompleted: false,
+            // 乱序
+            shuffledIndices: [],
+            // 模拟测验
+            quizQuestions: [],
+            quizAnswers: [],
+            quizAnswered: [],
+            quizCompleted: false,
+            quizScore: 0,
+        };
+
+        const container = document.getElementById('appContainer');
+        const tabs = document.querySelectorAll('.mode-tab');
+
+        // ======================== 工具 ========================
+        function shuffle(arr) {
+            const a = [...arr];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        function getLetter(index) {
+            return String.fromCharCode(65 + index);
+        }
+
+        function getAnswerLetter(q, answerIndex) {
+            return getLetter(answerIndex);
+        }
+
+        // ======================== 渲染 ========================
+        function render() {
+            if (state.mode === 'order') renderOrderMode();
+            else if (state.mode === 'random') renderRandomMode();
+            else if (state.mode === 'quiz') renderQuizMode();
+            updateTabs();
+        }
+
+        function updateTabs() {
+            tabs.forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.mode === state.mode);
+            });
+        }
+
+        // ---------- 顺序 ----------
+        function renderOrderMode() {
+            const qs = QUESTIONS;
+            const total = qs.length;
+            const idx = state.currentIndex;
+
+            if (state.isCompleted && idx >= total) {
+                renderCompletion(qs, '顺序');
+                return;
+            }
+
+            const q = qs[idx];
+            const isAnswered = state.answered[idx] || false;
+            const userAns = state.answers[idx];
+            const isCorrect = isAnswered && userAns === q.ans;
+
+            let html = `
+                <div class="progress-text">
+                    <span class="num">第 ${idx+1} / ${total} 题</span>
+                    <span>已答 ${state.answers.filter(a => a !== undefined).length} / ${total}</span>
+                </div>
+                <div class="progress-bar-wrap">
+                    <div class="progress-bar-fill" style="width: ${((idx) / total) * 100}%;"></div>
+                </div>
+                <div class="card">
+                    <div class="card-title">
+                        <span>📋 顺序答题</span>
+                        <span class="badge">${idx+1}/${total}</span>
+                    </div>
+                    <div class="question-text">${q.q}</div>
+                    <div class="options">
+            `;
+
+            q.opts.forEach((opt, oi) => {
+                let cls = 'option-item';
+                if (isAnswered) {
+                    cls += ' disabled';
+                    if (oi === q.ans) cls += ' correct';
+                    if (oi === userAns && oi !== q.ans) cls += ' wrong';
+                    if (oi === userAns && oi === q.ans) cls += ' selected';
+                }
+                const selectedAttr = (!isAnswered && state.answers[idx] === oi) ? ' selected' : '';
+                html += `
+                    <div class="${cls}${selectedAttr}" data-optindex="${oi}" data-qid="${idx}">
+                        <span class="label">${getLetter(oi)}.</span>
+                        <span class="text">${opt.substring(3)}</span>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+
+            if (isAnswered) {
+                const resultText = isCorrect ? '✅ 回答正确！' : '❌ 回答错误';
+                const cls = isCorrect ? 'feedback show correct' : 'feedback show wrong';
+                html += `
+                    <div class="${cls}">
+                        <div class="result-label"><span class="icon">${isCorrect ? '✅' : '❌'}</span> ${resultText}</div>
+                        <div class="correct-answer">正确答案：${getLetter(q.ans)}. ${q.opts[q.ans].substring(3)}</div>
+                        <div class="explanation">📖 ${q.exp}</div>
+                    </div>
+                `;
+            }
+
+            html += `<div class="btn-group">`;
+            if (isAnswered) {
+                const nextDisabled = idx >= total - 1;
+                html += `
+                    <button class="btn btn-primary" ${nextDisabled ? 'disabled' : ''} id="nextBtn">${nextDisabled ? '已完成' : '下一题 →'}</button>
+                `;
+            } else {
+                html += `
+                    <button class="btn btn-primary" id="confirmBtn" disabled>请先选择答案</button>
+                `;
+            }
+            html += `</div></div>`;
+
+            container.innerHTML = html;
+
+            if (!isAnswered) {
+                const optItems = container.querySelectorAll('.option-item');
+                optItems.forEach(el => {
+                    el.addEventListener('click', function() {
+                        const oi = parseInt(this.dataset.optindex);
+                        const qid = parseInt(this.dataset.qid);
+                        if (state.answered[qid]) return;
+                        optItems.forEach(item => item.classList.remove('selected'));
+                        this.classList.add('selected');
+                        state.answers[qid] = oi;
+                        const confirmBtn = document.getElementById('confirmBtn');
+                        if (confirmBtn) {
+                            confirmBtn.textContent = '确认答案 ✓';
+                            confirmBtn.disabled = false;
+                            confirmBtn.className = 'btn btn-success';
+                            confirmBtn.onclick = function() {
+                                if (state.answers[qid] === undefined) return;
+                                state.answered[qid] = true;
+                                renderOrderMode();
+                            };
+                        }
+                    });
+                });
+            } else {
+                const nextBtn = document.getElementById('nextBtn');
+                if (nextBtn) {
+                    nextBtn.addEventListener('click', function() {
+                        if (state.currentIndex < total - 1) {
+                            state.currentIndex++;
+                            renderOrderMode();
+                        } else {
+                            state.isCompleted = true;
+                            renderOrderMode();
+                        }
+                    });
+                }
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ---------- 乱序 ----------
+        function renderRandomMode() {
+            const total = QUESTIONS.length;
+            if (state.shuffledIndices.length === 0) {
+                state.shuffledIndices = shuffle(Array.from({ length: total }, (_, i) => i));
+                state.answers = [];
+                state.answered = [];
+                state.currentIndex = 0;
+                state.isCompleted = false;
+                for (let i = 0; i < total; i++) {
+                    state.answers[i] = undefined;
+                    state.answered[i] = false;
+                }
+            }
+
+            const idx = state.currentIndex;
+            if (state.isCompleted && idx >= total) {
+                const orderedQs = state.shuffledIndices.map(i => QUESTIONS[i]);
+                renderCompletion(orderedQs, '乱序');
+                return;
+            }
+
+            const qIdx = state.shuffledIndices[idx];
+            const q = QUESTIONS[qIdx];
+            const isAnswered = state.answered[qIdx] || false;
+            const userAns = state.answers[qIdx];
+            const isCorrect = isAnswered && userAns === q.ans;
+
+            let html = `
+                <div class="progress-text">
+                    <span class="num">第 ${idx+1} / ${total} 题 (乱序)</span>
+                    <span>已答 ${state.shuffledIndices.filter(i => state.answered[i]).length} / ${total}</span>
+                </div>
+                <div class="progress-bar-wrap">
+                    <div class="progress-bar-fill" style="width: ${((idx) / total) * 100}%;"></div>
+                </div>
+                <div class="card">
+                    <div class="card-title">
+                        <span>🎲 乱序答题</span>
+                        <span class="badge">${idx+1}/${total}</span>
+                    </div>
+                    <div class="question-text">${q.q}</div>
+                    <div class="options">
+            `;
+
+            q.opts.forEach((opt, oi) => {
+                let cls = 'option-item';
+                if (isAnswered) {
+                    cls += ' disabled';
+                    if (oi === q.ans) cls += ' correct';
+                    if (oi === userAns && oi !== q.ans) cls += ' wrong';
+                    if (oi === userAns && oi === q.ans) cls += ' selected';
+                }
+                const selectedAttr = (!isAnswered && state.answers[qIdx] === oi) ? ' selected' : '';
+                html += `
+                    <div class="${cls}${selectedAttr}" data-optindex="${oi}" data-qid="${qIdx}">
+                        <span class="label">${getLetter(oi)}.</span>
+                        <span class="text">${opt.substring(3)}</span>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+
+            if (isAnswered) {
+                const resultText = isCorrect ? '✅ 回答正确！' : '❌ 回答错误';
+                const cls = isCorrect ? 'feedback show correct' : 'feedback show wrong';
+                html += `
+                    <div class="${cls}">
+                        <div class="result-label"><span class="icon">${isCorrect ? '✅' : '❌'}</span> ${resultText}</div>
+                        <div class="correct-answer">正确答案：${getLetter(q.ans)}. ${q.opts[q.ans].substring(3)}</div>
+                        <div class="explanation">📖 ${q.exp}</div>
+                    </div>
+                `;
+            }
+
+            html += `<div class="btn-group">`;
+            if (isAnswered) {
+                const nextDisabled = idx >= total - 1;
+                html += `
+                    <button class="btn btn-primary" ${nextDisabled ? 'disabled' : ''} id="nextBtn">${nextDisabled ? '已完成' : '下一题 →'}</button>
+                `;
+            } else {
+                html += `
+                    <button class="btn btn-primary" id="confirmBtn" disabled>请先选择答案</button>
+                `;
+            }
+            html += `</div></div>`;
+
+            container.innerHTML = html;
+
+            if (!isAnswered) {
+                const optItems = container.querySelectorAll('.option-item');
+                optItems.forEach(el => {
+                    el.addEventListener('click', function() {
+                        const oi = parseInt(this.dataset.optindex);
+                        const qid = parseInt(this.dataset.qid);
+                        if (state.answered[qid]) return;
+                        optItems.forEach(item => item.classList.remove('selected'));
+                        this.classList.add('selected');
+                        state.answers[qid] = oi;
+                        const confirmBtn = document.getElementById('confirmBtn');
+                        if (confirmBtn) {
+                            confirmBtn.textContent = '确认答案 ✓';
+                            confirmBtn.disabled = false;
+                            confirmBtn.className = 'btn btn-success';
+                            confirmBtn.onclick = function() {
+                                if (state.answers[qid] === undefined) return;
+                                state.answered[qid] = true;
+                                renderRandomMode();
+                            };
+                        }
+                    });
+                });
+            } else {
+                const nextBtn = document.getElementById('nextBtn');
+                if (nextBtn) {
+                    nextBtn.addEventListener('click', function() {
+                        if (state.currentIndex < total - 1) {
+                            state.currentIndex++;
+                            renderRandomMode();
+                        } else {
+                            state.isCompleted = true;
+                            renderRandomMode();
+                        }
+                    });
+                }
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ---------- 模拟测验 ----------
+        function renderQuizMode() {
+            if (state.quizQuestions.length === 0) {
+                const shuffled = shuffle(QUESTIONS);
+                state.quizQuestions = shuffled.slice(0, 20);
+                state.quizAnswers = new Array(20).fill(undefined);
+                state.quizAnswered = new Array(20).fill(false);
+                state.quizCompleted = false;
+                state.quizScore = 0;
+                state.currentIndex = 0;
+            }
+
+            if (state.quizCompleted) {
+                renderQuizResult();
+                return;
+            }
+
+            const total = state.quizQuestions.length;
+            const idx = state.currentIndex;
+            if (idx >= total) {
+                state.quizCompleted = true;
+                calculateQuizScore();
+                renderQuizResult();
+                return;
+            }
+
+            const q = state.quizQuestions[idx];
+            const isAnswered = state.quizAnswered[idx];
+            const userAns = state.quizAnswers[idx];
+
+            let html = `
+                <div class="quiz-progress">📝 模拟测验 · <span>${idx+1} / ${total}</span></div>
+                <div class="progress-bar-wrap">
+                    <div class="progress-bar-fill" style="width: ${(idx / total) * 100}%;"></div>
+                </div>
+                <div class="card">
+                    <div class="card-title">
+                        <span>📝 模拟测验</span>
+                        <span class="badge">${idx+1}/${total}</span>
+                    </div>
+                    <div class="question-text">${q.q}</div>
+                    <div class="options">
+            `;
+
+            q.opts.forEach((opt, oi) => {
+                let cls = 'option-item';
+                if (isAnswered) {
+                    cls += ' disabled';
+                    if (oi === userAns) cls += ' selected';
+                }
+                const selectedAttr = (!isAnswered && state.quizAnswers[idx] === oi) ? ' selected' : '';
+                html += `
+                    <div class="${cls}${selectedAttr}" data-optindex="${oi}" data-qid="${idx}">
+                        <span class="label">${getLetter(oi)}.</span>
+                        <span class="text">${opt.substring(3)}</span>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+
+            html += `<div class="btn-group">`;
+            if (isAnswered) {
+                const isLast = idx >= total - 1;
+                html += `
+                    <button class="btn btn-primary" id="nextQuizBtn">${isLast ? '交卷 📊' : '下一题 →'}</button>
+                `;
+            } else {
+                html += `
+                    <button class="btn btn-primary" id="confirmQuizBtn" disabled>请先选择答案</button>
+                `;
+            }
+            html += `</div></div>`;
+
+            container.innerHTML = html;
+
+            if (!isAnswered) {
+                const optItems = container.querySelectorAll('.option-item');
+                optItems.forEach(el => {
+                    el.addEventListener('click', function() {
+                        const oi = parseInt(this.dataset.optindex);
+                        const qid = parseInt(this.dataset.qid);
+                        if (state.quizAnswered[qid]) return;
+                        optItems.forEach(item => item.classList.remove('selected'));
+                        this.classList.add('selected');
+                        state.quizAnswers[qid] = oi;
+                        const confirmBtn = document.getElementById('confirmQuizBtn');
+                        if (confirmBtn) {
+                            confirmBtn.textContent = '确认答案 ✓';
+                            confirmBtn.disabled = false;
+                            confirmBtn.className = 'btn btn-success';
+                            confirmBtn.onclick = function() {
+                                if (state.quizAnswers[qid] === undefined) return;
+                                state.quizAnswered[qid] = true;
+                                if (state.currentIndex < total - 1) {
+                                    state.currentIndex++;
+                                    renderQuizMode();
+                                } else {
+                                    state.quizCompleted = true;
+                                    calculateQuizScore();
+                                    renderQuizResult();
+                                }
+                            };
+                        }
+                    });
+                });
+            } else {
+                const nextBtn = document.getElementById('nextQuizBtn');
+                if (nextBtn) {
+                    nextBtn.addEventListener('click', function() {
+                        if (state.currentIndex < total - 1) {
+                            state.currentIndex++;
+                            renderQuizMode();
+                        } else {
+                            state.quizCompleted = true;
+                            calculateQuizScore();
+                            renderQuizResult();
+                        }
+                    });
+                }
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function calculateQuizScore() {
+            let score = 0;
+            for (let i = 0; i < state.quizQuestions.length; i++) {
+                if (state.quizAnswers[i] === state.quizQuestions[i].ans) {
+                    score++;
+                }
+            }
+            state.quizScore = score;
+        }
+
+        function renderQuizResult() {
+            const qs = state.quizQuestions;
+            const total = qs.length;
+            const score = state.quizScore;
+
+            let html = `
+                <div class="result-summary">
+                    <div class="score-circle">
+                        <div class="big">${score}</div>
+                        <div class="small">总分 ${total}</div>
+                    </div>
+                    <div class="msg">${score >= 16 ? '🎉 太棒了！' : score >= 12 ? '👍 不错哦！' : '💪 继续加油！'}</div>
+                    <div class="sub-msg">答对 ${score} 题，正确率 ${Math.round(score/total*100)}%</div>
+                </div>
+                <div style="margin-top: 16px;">
+            `;
+
+            qs.forEach((q, i) => {
+                const userAns = state.quizAnswers[i];
+                const isCorrect = userAns === q.ans;
+                const cls = isCorrect ? 'result-item correct-item' : 'result-item wrong-item';
+                const userLetter = userAns !== undefined ? getLetter(userAns) : '未作答';
+                const correctLetter = getLetter(q.ans);
+                html += `
+                    <div class="${cls}">
+                        <div class="q">${i+1}. ${q.q}</div>
+                        <div class="ans">
+                            你的答案：<span class="user-ans ${isCorrect ? 'correct-text' : 'wrong-text'}">${userLetter}. ${userAns !== undefined ? q.opts[userAns].substring(3) : '未作答'}</span>
+                            ${!isCorrect ? ` &nbsp; 正确答案：<span style="color:#22c55e;font-weight:600;">${correctLetter}. ${q.opts[q.ans].substring(3)}</span>` : ''}
+                        </div>
+                        <div class="exp">📖 ${q.exp}</div>
+                    </div>
+                `;
+            });
+
+            html += `
+                </div>
+                <div class="btn-group" style="margin-top: 20px;">
+                    <button class="btn btn-primary" id="resetQuizBtn">🔄 重新测验</button>
+                    <button class="btn btn-secondary" id="backToOrderBtn">📋 顺序刷题</button>
+                </div>
+            `;
+
+            container.innerHTML = html;
+
+            document.getElementById('resetQuizBtn').addEventListener('click', function() {
+                state.quizQuestions = [];
+                state.quizAnswers = [];
+                state.quizAnswered = [];
+                state.quizCompleted = false;
+                state.quizScore = 0;
+                state.currentIndex = 0;
+                renderQuizMode();
+            });
+
+            document.getElementById('backToOrderBtn').addEventListener('click', function() {
+                state.mode = 'order';
+                resetOrderState();
+                render();
+            });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ---------- 完成页面 ----------
+        function renderCompletion(qs, modeName) {
+            const total = qs.length;
+            let correct = 0;
+            let answered = 0;
+            const details = [];
+
+            if (modeName === '顺序') {
+                for (let i = 0; i < total; i++) {
+                    const a = state.answers[i];
+                    if (a !== undefined) {
+                        answered++;
+                        if (a === qs[i].ans) correct++;
+                        details.push({ q: qs[i], userAns: a, isCorrect: a === qs[i].ans });
+                    } else {
+                        details.push({ q: qs[i], userAns: undefined, isCorrect: false });
+                    }
+                }
+            } else {
+                for (let i = 0; i < total; i++) {
+                    const qIdx = state.shuffledIndices[i];
+                    const q = QUESTIONS[qIdx];
+                    const a = state.answers[qIdx];
+                    if (a !== undefined) {
+                        answered++;
+                        if (a === q.ans) correct++;
+                        details.push({ q, userAns: a, isCorrect: a === q.ans });
+                    } else {
+                        details.push({ q, userAns: undefined, isCorrect: false });
+                    }
+                }
+            }
+
+            const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
+
+            let html = `
+                <div class="result-summary">
+                    <div class="score-circle">
+                        <div class="big">${correct}/${total}</div>
+                        <div class="small">正确率 ${pct}%</div>
+                    </div>
+                    <div class="msg">${modeName}答题完成！</div>
+                    <div class="sub-msg">已答 ${answered} 题，正确 ${correct} 题</div>
+                </div>
+                <div style="margin-top: 16px;">
+            `;
+
+            details.forEach((d, i) => {
+                const q = d.q;
+                const isCorrect = d.isCorrect;
+                const userAns = d.userAns;
+                const cls = isCorrect ? 'result-item correct-item' : 'result-item wrong-item';
+                const userLetter = userAns !== undefined ? getLetter(userAns) : '未作答';
+                const correctLetter = getLetter(q.ans);
+                html += `
+                    <div class="${cls}">
+                        <div class="q">${i+1}. ${q.q}</div>
+                        <div class="ans">
+                            你的答案：<span class="user-ans ${isCorrect ? 'correct-text' : 'wrong-text'}">${userLetter}. ${userAns !== undefined ? q.opts[userAns].substring(3) : '未作答'}</span>
+                            ${!isCorrect ? ` &nbsp; 正确答案：<span style="color:#22c55e;font-weight:600;">${correctLetter}. ${q.opts[q.ans].substring(3)}</span>` : ''}
+                        </div>
+                        <div class="exp">📖 ${q.exp}</div>
+                    </div>
+                `;
+            });
+
+            html += `
+                </div>
+                <div class="btn-group" style="margin-top: 20px;">
+                    <button class="btn btn-primary" id="resetModeBtn">🔄 重新 ${modeName}答题</button>
+                    ${modeName === '顺序' ? `<button class="btn btn-secondary" id="switchRandomBtn">🎲 乱序试试</button>` : `<button class="btn btn-secondary" id="switchOrderBtn">📋 顺序刷题</button>`}
+                </div>
+            `;
+
+            container.innerHTML = html;
+
+            document.getElementById('resetModeBtn').addEventListener('click', function() {
+                if (modeName === '顺序') {
+                    resetOrderState();
+                    renderOrderMode();
+                } else {
+                    resetRandomState();
+                    renderRandomMode();
+                }
+            });
+
+            const switchBtn = document.getElementById('switchRandomBtn') || document.getElementById('switchOrderBtn');
+            if (switchBtn) {
+                switchBtn.addEventListener('click', function() {
+                    if (modeName === '顺序') {
+                        state.mode = 'random';
+                        resetRandomState();
+                        render();
+                    } else {
+                        state.mode = 'order';
+                        resetOrderState();
+                        render();
+                    }
+                });
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ---------- 重置 ----------
+        function resetOrderState() {
+            state.currentIndex = 0;
+            state.answers = new Array(QUESTIONS.length).fill(undefined);
+            state.answered = new Array(QUESTIONS.length).fill(false);
+            state.isCompleted = false;
+        }
+
+        function resetRandomState() {
+            state.shuffledIndices = [];
+            state.currentIndex = 0;
+            state.answers = new Array(QUESTIONS.length).fill(undefined);
+            state.answered = new Array(QUESTIONS.length).fill(false);
+            state.isCompleted = false;
+        }
+
+        function resetQuizState() {
+            state.quizQuestions = [];
+            state.quizAnswers = [];
+            state.quizAnswered = [];
+            state.quizCompleted = false;
+            state.quizScore = 0;
+            state.currentIndex = 0;
+        }
+
+        // ======================== 模式切换 ========================
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                const mode = this.dataset.mode;
+                if (mode === state.mode) return;
+                state.mode = mode;
+                if (mode === 'order') resetOrderState();
+                else if (mode === 'random') resetRandomState();
+                else if (mode === 'quiz') resetQuizState();
+                render();
+            });
+        });
+
+        // ======================== 初始化 ========================
+        function init() {
+            resetOrderState();
+            render();
+        }
+        init();
+    </script>
+</body>
+</html>

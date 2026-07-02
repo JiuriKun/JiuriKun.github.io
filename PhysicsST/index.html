@@ -1,1 +1,1163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>大学物理（上）刷题 · 70题</title>
+    <!-- MathJax 配置与加载 -->
+    <script>
+        MathJax = {
+            tex: { inlineMath: [
+                    ['$', '$'],
+                    ['\\(', '\\)']
+                ] },
+            svg: { fontCache: 'global' },
+            options: { enableMenu: false }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async>
+    </script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f5f9fc;
+            padding: 16px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .app {
+            max-width: 820px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 28px;
+            box-shadow: 0 12px 40px rgba(0, 20, 40, 0.12);
+            padding: 24px 22px 32px;
+            transition: all 0.2s;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0b2b44;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        h1 small {
+            font-size: 14px;
+            font-weight: 400;
+            color: #5a7a94;
+            margin-left: 6px;
+        }
+
+        .subhead {
+            color: #3a5a74;
+            font-size: 14px;
+            border-bottom: 1px solid #e6edf4;
+            padding-bottom: 14px;
+            margin-bottom: 18px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .mode-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+        .mode-btn {
+            padding: 8px 24px;
+            border-radius: 40px;
+            border: 1.5px solid #c8dae8;
+            background: #f0f6fc;
+            font-size: 15px;
+            font-weight: 600;
+            color: #1e4a6b;
+            cursor: pointer;
+            transition: 0.2s;
+            flex: 1 1 auto;
+            min-width: 90px;
+            text-align: center;
+        }
+        .mode-btn.active {
+            background: #1a4970;
+            border-color: #1a4970;
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(26, 73, 112, 0.25);
+        }
+        .mode-btn:hover:not(.active) {
+            background: #e3eef8;
+            border-color: #97b8d4;
+        }
+
+        .progress-wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            color: #1f4a6a;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .progress-bar {
+            flex: 1;
+            min-width: 100px;
+            height: 6px;
+            background: #dfe9f2;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 0 10px;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #2d7bb6, #1a5a8a);
+            border-radius: 8px;
+            transition: width 0.3s ease;
+        }
+
+        .question-card {
+            background: #fafdff;
+            border-radius: 20px;
+            padding: 20px 18px 18px;
+            border: 1px solid #e2ecf5;
+            margin-bottom: 16px;
+            min-height: 200px;
+        }
+
+        .q-header {
+            font-weight: 600;
+            color: #0e3a5c;
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+        .q-stem {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #0b1f30;
+            margin-bottom: 16px;
+            word-break: break-word;
+        }
+        .q-stem .math {
+            display: inline-block;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .opt-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 14px;
+            background: #f4f9ff;
+            border: 1.5px solid #dbe6f0;
+            cursor: pointer;
+            transition: 0.15s;
+            font-size: 15px;
+            line-height: 1.5;
+            color: #102a3f;
+        }
+        .opt-item:hover {
+            background: #eaf3fc;
+            border-color: #a6c2dc;
+        }
+        .opt-item.selected {
+            border-color: #1a6a9e;
+            background: #ddeeff;
+            box-shadow: 0 0 0 2px rgba(26, 106, 158, 0.15);
+        }
+        .opt-item.correct {
+            border-color: #1a8a4a;
+            background: #e4f6ea;
+        }
+        .opt-item.wrong {
+            border-color: #c73a3a;
+            background: #fde8e8;
+        }
+        .opt-item.disabled {
+            cursor: default;
+            opacity: 0.85;
+        }
+        .opt-item .label {
+            font-weight: 700;
+            color: #1e4f72;
+            min-width: 22px;
+        }
+        .opt-item .content {
+            flex: 1;
+        }
+
+        .feedback {
+            background: #eef5fb;
+            border-radius: 16px;
+            padding: 14px 18px;
+            margin-top: 10px;
+            border-left: 5px solid #2d7bb6;
+            font-size: 15px;
+            line-height: 1.7;
+            color: #082b42;
+            display: none;
+        }
+        .feedback.show {
+            display: block;
+        }
+        .feedback .result-badge {
+            font-weight: 700;
+            font-size: 17px;
+            display: inline-block;
+            margin-bottom: 4px;
+        }
+        .feedback .result-badge.correct {
+            color: #1a7a3a;
+        }
+        .feedback .result-badge.wrong {
+            color: #b33a3a;
+        }
+        .feedback .explanation {
+            margin-top: 6px;
+            color: #10344e;
+        }
+        .feedback .explanation .math {
+            display: inline-block;
+        }
+
+        .nav-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 6px;
+        }
+        .nav-btn {
+            padding: 10px 26px;
+            border-radius: 40px;
+            border: none;
+            font-weight: 600;
+            font-size: 15px;
+            background: #e2ecf7;
+            color: #104062;
+            cursor: pointer;
+            transition: 0.15s;
+            flex: 1 1 auto;
+            min-width: 80px;
+        }
+        .nav-btn:active {
+            transform: scale(0.96);
+        }
+        .nav-btn.primary {
+            background: #1a4970;
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(26, 73, 112, 0.2);
+        }
+        .nav-btn.primary:hover {
+            background: #0f3b5e;
+        }
+        .nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .nav-btn.outline {
+            background: transparent;
+            border: 1.5px solid #b8cedf;
+        }
+        .nav-btn.outline:hover {
+            background: #eaf2f9;
+        }
+
+        .reset-area {
+            margin-top: 16px;
+            text-align: center;
+        }
+        .reset-btn {
+            background: transparent;
+            border: 1px solid #b8cedf;
+            padding: 6px 22px;
+            border-radius: 30px;
+            font-size: 13px;
+            color: #2f5a7a;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .reset-btn:hover {
+            background: #eaf2f9;
+        }
+
+        .footer-note {
+            text-align: center;
+            font-size: 12px;
+            color: #6a8aa4;
+            margin-top: 18px;
+            border-top: 1px solid #e6edf4;
+            padding-top: 14px;
+        }
+
+        @media (max-width: 500px) {
+            .app {
+                padding: 16px 12px 20px;
+                border-radius: 20px;
+            }
+            h1 {
+                font-size: 20px;
+            }
+            .q-stem {
+                font-size: 15px;
+            }
+            .opt-item {
+                font-size: 14px;
+                padding: 8px 12px;
+            }
+            .nav-btn {
+                padding: 8px 16px;
+                font-size: 14px;
+                min-width: 60px;
+            }
+            .mode-btn {
+                padding: 6px 14px;
+                font-size: 13px;
+                min-width: 70px;
+            }
+        }
+
+        .math {
+            overflow-x: auto;
+            overflow-y: hidden;
+            max-width: 100%;
+        }
+        .MathJax_SVG_Display {
+            overflow-x: auto;
+            overflow-y: hidden;
+            max-width: 100%;
+        }
+        mjx-container {
+            display: inline-block !important;
+            max-width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="app" id="app">
+        <h1>📘 大学物理（上） <small>70题 · 请等待题目正常渲染</small></h1>
+        <div class="subhead">
+            <span id="modeLabel">顺序练习</span>
+            <span id="counterLabel">1 / 70</span>
+        </div>
+
+        <div class="mode-bar">
+            <button class="mode-btn active" data-mode="seq" id="modeSeq">📋 顺序</button>
+            <button class="mode-btn" data-mode="rand" id="modeRand">🎲 乱序</button>
+        </div>
+
+        <div class="progress-wrap">
+            <span>进度</span>
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+            <span id="progressText">0%</span>
+        </div>
+
+        <div class="question-card" id="questionCard">
+            <div class="q-header" id="qHeader">第 1 题</div>
+            <div class="q-stem" id="qStem">加载中...</div>
+            <div class="options" id="optionsContainer"></div>
+            <div class="feedback" id="feedback">
+                <div class="result-badge" id="resultBadge">✅ 正确</div>
+                <div class="explanation" id="explanationText">解析内容</div>
+            </div>
+        </div>
+
+        <div class="nav-row">
+            <button class="nav-btn outline" id="prevBtn">◀ 上一题</button>
+            <button class="nav-btn primary" id="submitBtn">提交答案</button>
+            <button class="nav-btn outline" id="nextBtn">下一题 ▶</button>
+        </div>
+
+        <div class="reset-area">
+            <button class="reset-btn" id="resetBtn">🔄 重新开始</button>
+        </div>
+        <div class="footer-note">点击选项后提交 · 支持 MathJax 渲染</div>
+    </div>
+
+    <script>
+        // ============================================================
+        // 请务必等待一会让公式正常渲染
+        // ============================================================
+        const QUESTIONS = [];
+
+        function q(id, stem, opts, ans, exp) {
+            return { id, stem, options: opts, answer: ans, explanation: exp };
+        }
+
+        // 1
+        QUESTIONS.push(q(1,
+            '质点沿 $x$ 轴运动时，运动方程为 $x = 2t^{2} + 6\\,(\\mathrm{m})$ ，当 $t = 1\\,\\mathrm{s}$ 时，质点的加速度大小为（  ）',
+            ['$2\\,\\mathrm{m\\cdot s^{-2}}$', '$4\\,\\mathrm{m\\cdot s^{-2}}$', '$6\\,\\mathrm{m\\cdot s^{-2}}$',
+                '$8\\,\\mathrm{m\\cdot s^{-2}}$'
+            ],
+            'B',
+            '由 $x=2t^2+6$ 得 $v=4t$，$a=4\\,\\mathrm{m/s^2}$，故选 B。'
+        ));
+        // 2
+        QUESTIONS.push(q(2,
+            '一质点在 $xOy$ 平面上运动，运动函数为 $x = 2t\\,(\\mathrm{m}), y = 4t^{2} - 8\\,(\\mathrm{m})$ ，则 $t = 1\\,\\mathrm{s}$ 时的加速度为（  ）',
+            ['$2\\,\\mathrm{m\\cdot s^{-2}}$', '$8\\vec{j}\\,\\mathrm{m\\cdot s^{-2}}$', '$8\\vec{i}\\,\\mathrm{m\\cdot s^{-2}}$',
+                '$0\\,\\mathrm{m\\cdot s^{-2}}$'
+            ],
+            'B',
+            '$a_x=0, a_y=8$，故 $\\vec a = 8\\vec j\\,\\mathrm{m/s^2}$。'
+        ));
+        // 3
+        QUESTIONS.push(q(3,
+            '质点作速率为 $\\nu$ 、半径为 $R$ 的变速圆周运动时的加速度大小可表示成（  ）',
+            ['$\\dfrac{d\\nu}{dt}$', '$\\dfrac{\\nu^{2}}{R}$', '$\\dfrac{d\\nu}{dt} +\\dfrac{\\nu^{2}}{R}$',
+                '$\\left[(\\dfrac{d\\nu}{dt})^{2} + (\\dfrac{\\nu^{2}}{R})^{2}\\right]^{1/2}$'
+            ],
+            'D',
+            '变速圆周运动加速度包含切向 $a_t = dv/dt$ 和法向 $a_n = v^2/R$，合加速度为 $\\sqrt{a_t^2+a_n^2}$。'
+        ));
+        // 4
+        QUESTIONS.push(q(4,
+            '一质点做平面曲线运动，加速度方向始终指向曲线轨道（  ）',
+            ['外侧', '内侧', '顺着曲线方向', '逆着曲线方向'],
+            'B',
+            '法向加速度指向曲线凹侧（内侧）。'
+        ));
+        // 5
+        QUESTIONS.push(q(5,
+            '一质点沿 $x$ 轴运动，坐标与时间的变化关系为 $x = 8t^{3} - 6t\\,(\\mathrm{m})$ ，质点在最初2s内的平均速度大小为（  ）',
+            ['$52\\,\\mathrm{m\\cdot s^{-1}}$', '$26\\,\\mathrm{m\\cdot s^{-1}}$', '$90\\,\\mathrm{m\\cdot s^{-1}}$',
+                '$24\\,\\mathrm{m\\cdot s^{-1}}$'
+            ],
+            'B',
+            '$\\bar v = \\dfrac{x(2)-x(0)}{2} = \\dfrac{(8\\cdot8-12)-0}{2}=26\\,\\mathrm{m/s}$。'
+        ));
+        // 6
+        QUESTIONS.push(q(6,
+            '一质点沿 $x$ 轴运动，坐标与时间的变化关系为 $x = 2t^{3} - t\\,(\\mathrm{m})$ ，质点在最初2s内的平均速度大小为（  ）',
+            ['$14\\,\\mathrm{m\\cdot s^{-1}}$', '$7\\,\\mathrm{m\\cdot s^{-1}}$', '$23\\,\\mathrm{m\\cdot s^{-1}}$',
+                '$24\\,\\mathrm{m\\cdot s^{-1}}$'
+            ],
+            'B',
+            '$\\bar v = \\dfrac{x(2)-x(0)}{2} = \\dfrac{(2\\cdot8-2)-0}{2}=7\\,\\mathrm{m/s}$。'
+        ));
+        // 7
+        QUESTIONS.push(q(7,
+            '某发动机工作时，主轴边缘一点作圆周运动，方程为 $\\theta = t^{3} + 4t + 3\\,(\\mathrm{rad})$ ，在 $t = 2\\,\\mathrm{s}$ 时，该点的角加速度大小为（  ）',
+            ['$8\\,\\mathrm{rad\\cdot s^{-2}}$', '$10\\,\\mathrm{rad\\cdot s^{-2}}$', '$12\\,\\mathrm{rad\\cdot s^{-2}}$',
+                '$14\\,\\mathrm{rad\\cdot s^{-2}}$'
+            ],
+            'C',
+            '$\\omega = 3t^2+4$，$\\alpha = 6t$，$t=2$ 时 $\\alpha = 12\\,\\mathrm{rad/s^2}$。'
+        ));
+        // 8
+        QUESTIONS.push(q(8,
+            '一小球沿斜面向上运动，其运动过程为 $x = 5 + 4t - t^{2}\\,(\\mathrm{m})$ ，则小球运动到最高点的时间是（  ）',
+            ['1s', '2s', '3s', '4s'],
+            'B',
+            '$v = 4-2t = 0 \\Rightarrow t=2$s。'
+        ));
+        // 9
+        QUESTIONS.push(q(9,
+            '一质点运动时切向加速度为恒量，法向加速度为 0，此质点做（  ）',
+            ['变加速曲线运动', '匀速率圆周运动', '匀变速曲线运动', '匀变速直线运动'],
+            'D',
+            '$a_n=0$ 轨迹为直线，$a_t$ 恒量 -> 匀变速直线运动。'
+        ));
+        // 10
+        QUESTIONS.push(q(10,
+            '一质点运动时，$a_{n} = 0$ ，$a_{t} = c$ （ $c$ 是不为零的常数），此质点作（  ）',
+            ['匀速直线运动', '匀速曲线运动', '匀变速直线运动', '不能确定'],
+            'C',
+            '$a_n=0$ 直线，$a_t=c\\ne0$ 匀变速直线运动。'
+        ));
+        // 11
+        QUESTIONS.push(q(11,
+            '质量为 $M$ 的木块静止在光滑的水平桌面上，质量为 $m$ ，速度为 $\\nu_{0}$ 的子弹水平地射入木块，并嵌在木块内与木块一起运动。子弹相对木块静止后，子弹的速度为（  ）',
+            ['$\\dfrac{m M}{m + M}\\nu_{0}$', '$\\dfrac{m^{2}}{m + M}\\nu_{0}$', '$\\dfrac{m}{m + M}\\nu_{0}$',
+                '$\\dfrac{M}{m + M}\\nu_{0}$'
+            ],
+            'C',
+            '动量守恒：$m v_0 = (m+M)v \\Rightarrow v = \\dfrac{m}{m+M}v_0$。'
+        ));
+        // 12
+        QUESTIONS.push(q(12,
+            '质量为 $M$ 的木块静止在光滑的水平桌面上，质量为 $m$ ，速度为 $\\nu_{0}$ 的子弹水平地射入木块，并嵌在木块内与木块一起运动。子弹相对木块静止后，木块的速度为（  ）',
+            ['$\\dfrac{m M}{m + M}\\nu_{0}$', '$\\dfrac{m^{2}}{m + M}\\nu_{0}$', '$\\dfrac{m}{m + M}\\nu_{0}$',
+                '$\\dfrac{M}{m + M}\\nu_{0}$'
+            ],
+            'C',
+            '木块速度与子弹相同，$v = \\dfrac{m}{m+M}v_0$。'
+        ));
+        // 13
+        QUESTIONS.push(q(13,
+            '质量为 $M$ 的木块静止在光滑的水平桌面上，质量为 $m$ ，速度为 $\\nu_{0}$ 的子弹水平地射入木块，并嵌在木块内与木块一起运动。子弹相对木块静止后，子弹的动量为（  ）',
+            ['$\\dfrac{m M}{m + M}\\nu_{0}$', '$\\dfrac{m^{2}}{m + M}\\nu_{0}$', '$\\dfrac{m}{m + M}\\nu_{0}$',
+                '$\\dfrac{M}{m + M}\\nu_{0}$'
+            ],
+            'B',
+            '子弹动量 $p = m v = m \\cdot \\dfrac{m}{m+M}v_0 = \\dfrac{m^2}{m+M}v_0$。'
+        ));
+        // 14
+        QUESTIONS.push(q(14,
+            '质量为 $M$ 的木块静止在光滑的水平桌面上，质量为 $m$ ，速度为 $\\nu_{0}$ 的子弹水平地射入木块，并嵌在木块内与木块一起运动。子弹相对木块静止后，木块的动量为（  ）',
+            ['$\\dfrac{m M}{m + M}\\nu_{0}$', '$\\dfrac{m^{2}}{m + M}\\nu_{0}$', '$\\dfrac{m}{m + M}\\nu_{0}$',
+                '$\\dfrac{M}{m + M}\\nu_{0}$'
+            ],
+            'A',
+            '木块动量 $p = M v = M \\cdot \\dfrac{m}{m+M}v_0 = \\dfrac{mM}{m+M}v_0$。'
+        ));
+        // 15
+        QUESTIONS.push(q(15,
+            '质量为 $M$ 的木块静止在光滑的水平桌面上，质量为 $m$ ，速度为 $\\nu_{0}$ 的子弹水平地射入木块，并嵌在木块内与木块一起运动。子弹相对木块静止后，木块的冲量为（  ）',
+            ['$\\dfrac{m M}{m + M}\\nu_{0}$', '$\\dfrac{m^{2}}{m + M}\\nu_{0}$', '$\\dfrac{m}{m + M}\\nu_{0}$',
+                '$\\dfrac{M}{m + M}\\nu_{0}$'
+            ],
+            'A',
+            '木块冲量等于动量变化，$I = Mv = \\dfrac{mM}{m+M}v_0$。'
+        ));
+        // 16
+        QUESTIONS.push(q(16,
+            '下列说法中正确的是（  ）',
+            ['光年是时间单位', '研究地球的自转时可以将地球看做质点', '位移是矢量', '平均速率和平均速度的大小一定不相等'],
+            'C',
+            '位移是矢量，描述位置变化。光年是距离单位；研究自转不能看作质点；平均速率和平均速度大小不一定相等。'
+        ));
+        // 17
+        QUESTIONS.push(q(17,
+            '一质点在 $xOy$ 平面上运动，其运动方程为 $x = r\\cos(\\omega t)$，$y = r\\sin(\\omega t)$，其中 $r$ 为常数，此质点的运动状态为（  ）',
+            ['匀速直线运动', '匀加速直线运动', '圆周运动', '静止'],
+            'C',
+            '参数方程表示半径为 $r$ 的匀速圆周运动。'
+        ));
+        // 18
+        QUESTIONS.push(q(18,
+            '某质点的运动方程为 $\\vec{r} = 5t\\vec{i} + (15t - 5t^{2})\\vec{j}\\,(\\mathrm{m})$ ，则该质点的加速度为（  ）',
+            ['大小为 $10\\,\\mathrm{m\\cdot s^{-2}}$，方向为 $y$ 轴正方向',
+                '大小为 $10\\,\\mathrm{m\\cdot s^{-2}}$，方向为 $y$ 轴负方向',
+                '大小为 $5\\,\\mathrm{m\\cdot s^{-2}}$，方向为 $y$ 轴正方向',
+                '大小为 $5\\,\\mathrm{m\\cdot s^{-2}}$，方向为 $y$ 轴负方向'
+            ],
+            'B',
+            '$\\vec a = -10\\vec j\\,\\mathrm{m/s^2}$，大小为 10，方向 y 轴负方向。'
+        ));
+        // 19
+        QUESTIONS.push(q(19,
+            '某质点的运动方程为 $x = 3t^{3} - 5t + 6\\,(\\mathrm{m})$ ，则该质点作（  ）',
+            ['匀加速直线运动，加速度沿 $x$ 轴正方向', '匀加速直线运动，加速度沿 $x$ 轴负方向',
+                '变加速直线运动，加速度沿 $x$ 轴正方向', '变加速直线运动，加速度沿 $x$ 轴负方向'
+            ],
+            'C',
+            '$v = 9t^2-5$，$a = 18t$，$t>0$ 时 $a>0$，为变加速直线运动，加速度沿 x 轴正方向。'
+        ));
+        // 20
+        QUESTIONS.push(q(20,
+            '根据动量的定义，物体的运动状态不仅取决于速度，而且还与物体的（  ）有关。',
+            ['体积', '质量', '温度', '颜色'],
+            'B',
+            '动量 $\\vec p = m\\vec v$，与质量和速度有关。'
+        ));
+        // 21
+        QUESTIONS.push(q(21,
+            '一质点质量为 $m = 2\\,\\mathrm{kg}$ ，其运动方程为 $\\vec{r} = (t^{3} + 2t)\\vec{i} + (\\frac{1}{2} t^{2} - 5)\\vec{j}\\,(\\mathrm{m})$ ，当 $t = 1\\,\\mathrm{s}$ 时，所受合外力为（  ）N',
+            ['$5\\vec{i} +7\\vec{j}$', '$3\\vec{i} -4.5\\vec{j}$', '$5\\vec{i}$', '$12\\vec{i} +2\\vec{j}$'],
+            'D',
+            '$\\vec a = 6t\\vec i + \\vec j$，$t=1$ 时 $\\vec a = 6\\vec i+\\vec j$，$\\vec F = 2\\vec a = 12\\vec i+2\\vec j$。'
+        ));
+        // 22
+        QUESTIONS.push(q(22,
+            '一质量为 $m = 6\\,\\mathrm{kg}$ 的质点，其运动方程为 $\\vec{r} = (t^{3} + 2t)\\vec{i} + (0.5t^{2} - 5)\\vec{j}\\,(\\mathrm{m})$ ，当 $t = 1\\,\\mathrm{s}$ 时，所受合外力 $\\vec{F}$ 为（  ）N',
+            ['$15\\vec{i} +21\\vec{j}$', '$9\\vec{i} +13.5\\vec{j}$', '$15\\vec{i}$', '$36\\vec{i} +6\\vec{j}$'],
+            'D',
+            '$\\vec a = 6t\\vec i + \\vec j$，$t=1$ 时 $\\vec a = 6\\vec i+\\vec j$，$\\vec F = 6\\vec a = 36\\vec i+6\\vec j$。'
+        ));
+        // 23
+        QUESTIONS.push(q(23,
+            '力 $\\vec{F} = 2t\\vec{i} +6\\vec{j}$ 持续作用在一质点上 $t$ 时间，则从 $t = 1\\,\\mathrm{s}$ 到 $t = 2\\,\\mathrm{s}$ 这段时间内动量增量 $\\Delta \\vec{p}$ 为（  ） $\\mathrm{kg\\cdot m\\cdot s^{-1}}$',
+            ['$\\vec{i} +\\vec{j}$', '$4\\vec{i} +6\\vec{j}$', '$\\vec{i} +6\\vec{j}$', '$3\\vec{i} +6\\vec{j}$'],
+            'D',
+            '$\\Delta \\vec p = \\int_1^2 (2t\\vec i+6\\vec j)dt = (t^2\\vec i+6t\\vec j)|_1^2 = 3\\vec i+6\\vec j$。'
+        ));
+        // 24
+        QUESTIONS.push(q(24,
+            '一质量为 $m$ 的粒子位于 $(x,y)$ 处，速度为 $\\vec{v} = v_{x}\\vec{i} + v_{y}\\vec{j}$ ，则它相对于坐标原点的角动量 $\\vec{L}$ 表示为（  ）',
+            ['$\\vec{L} = m(xv_{y} - yv_{x})\\vec{k}$', '$\\vec{L} = m(yv_{x} - xv_{y})\\vec{k}$',
+                '$\\vec{L} = m(xv_{x} - yv_{y})\\vec{k}$', '$\\vec{L} = m(yv_{y} - xv_{x})\\vec{k}$'
+            ],
+            'A',
+            '$\\vec L = \\vec r \\times m\\vec v = m(xv_y - yv_x)\\vec k$。'
+        ));
+        // 25
+        QUESTIONS.push(q(25,
+            '关于动量、冲量，下列说法正确的是（  ）',
+            ['物体动量越大，表明它受到的冲量越大', '物体受到合外力的冲量等于它的动量的变化量',
+                '物体的速度大小不变，则它受到的冲量大小等于零', '物体动量的方向就是它受到的冲量的方向'
+            ],
+            'B',
+            '动量定理：合外力的冲量等于动量的变化量 $\\vec I = \\Delta \\vec p$。'
+        ));
+        // 26
+        QUESTIONS.push(q(26,
+            '一质点在几个外力同时作用下运动时，下列说法中正确的是（  ）',
+            ['质点的动量改变时，质点的动能一定改变', '质点的动能不变时，质点的动量也一定不变',
+                '外力的冲量是零时，外力的功一定为零', '外力的功为零时，外力的冲量一定为零'
+            ],
+            'C',
+            '冲量为零则动量不变，动能不变，功为零。功为零冲量不一定为零（如匀速圆周运动）。'
+        ));
+        // 27
+        QUESTIONS.push(q(27,
+            '在质点的下列运动中，所受合外力为零的是（  ）（$A$、$\\omega$ 均为不等于零的常数）',
+            ['$x = A(t + 6)^{3}$', '$x=6t^2$', '$x = 2t$', '$x = A\\cos(\\omega t + \\phi)$'],
+            'C',
+            '$x=2t$ 为匀速直线运动，$a=0$，合外力为零。'
+        ));
+        // 28
+        QUESTIONS.push(q(28,
+            '两质量均为 $2m$ 的冰车头尾相接并静止在光滑水平面上。一质量为 $m$ 的人从一辆车跳到另一辆车并与之共速运动。则冰车与人车末速度大小之比为（  ）',
+            ['$\\frac{3}{4}$', '$\\frac{3}{2}$', '$\\frac{5}{4}$', '不能确定'],
+            'B',
+            '动量守恒：$0 = 2m v_1 + (2m+m)v_2$，$|v_1|/|v_2| = 3/2$。'
+        ));
+        // 29
+        QUESTIONS.push(q(29,
+            '系统所受的外力的矢量和为（  ）时，系统的总动量不变。',
+            ['整数', '小数', '幂指数', '零'],
+            'D',
+            '动量守恒条件：合外力为零。'
+        ));
+        // 30
+        QUESTIONS.push(q(30,
+            '花样滑冰运动员在光滑的冰面上绕通过自身的竖直轴旋转，忽略冰面阻力、空气阻力作用，开始时运动员两臂伸开，其转动惯量为 $J$ ，角速度为 $\\omega$ 。然后她将两臂收回，使转动惯量减少为 $\\frac{1}{5} J$ ，这时她转动的角速度变为（  ）',
+            ['$\\frac{1}{5}\\omega$', '$5\\omega$', '$\\sqrt{5}\\omega$', '$\\frac{1}{\\sqrt{5}}\\omega$'],
+            'B',
+            '角动量守恒：$J\\omega = (J/5)\\omega\' \\Rightarrow \\omega\' = 5\\omega$。'
+        ));
+        // 31
+        QUESTIONS.push(q(31,
+            '花样滑冰运动员绕通过自身的竖直轴转动，开始时两臂伸开，转动惯量为 $J$ ，角速度为 $\\omega$ ，然后她将两臂收回，使转动惯量减少为 $\\frac{1}{2} J$ ，这时它转动的角速度变为（  ）',
+            ['$\\omega$', '$0.5\\omega$', '$2\\omega$', '$3\\omega$'],
+            'C',
+            '$J\\omega = (J/2)\\omega\' \\Rightarrow \\omega\' = 2\\omega$。'
+        ));
+        // 32
+        QUESTIONS.push(q(32,
+            '花样滑冰运动员绕通过自身的竖直轴转动，开始时两臂伸开，转动惯量为 $J$ ，角速度为 $\\omega$ ，然后她将两臂收回，使转动惯量减少为 $\\frac{1}{3} J$ ，这时她转动的角速度变为（  ）',
+            ['$\\frac{1}{3}\\omega$', '$3\\omega$', '$\\sqrt{3}\\omega$', '$\\frac{1}{\\sqrt{3}}\\omega$'],
+            'B',
+            '$J\\omega = (J/3)\\omega\' \\Rightarrow \\omega\' = 3\\omega$。'
+        ));
+        // 33
+        QUESTIONS.push(q(33,
+            '花样滑冰运动员绕过自身的竖直轴转动，开始时两臂伸开，转动惯量为 $J_{0}$ ，角速度为 $\\omega_{0}$ ；然后两手臂收拢，使其转动惯量变为 $\\frac{2}{3} J_{0}$ ，这时她转动的角速度变为（  ）',
+            ['$\\frac{3}{2}\\omega_{0}$', '$\\frac{2}{3}\\omega_{0}$', '$\\omega_{0}$', '$\\frac{1}{3}\\omega_{0}$'],
+            'A',
+            '$J_0\\omega_0 = (2J_0/3)\\omega\' \\Rightarrow \\omega\' = \\frac{3}{2}\\omega_0$。'
+        ));
+        // 34
+        QUESTIONS.push(q(34,
+            '花样滑冰运动员绕过自身的竖直轴转动，开始时两臂伸开，转动惯量为 $J_{0}$ ，角速度为 $\\omega_{0}$ ；然后两手臂收拢，使其转动惯量变为 $\\frac{2}{5} J_{0}$ ，则角速度为（  ）',
+            ['$\\frac{5}{2}\\omega_{0}$', '$\\frac{2}{5}\\omega_{0}$', '$\\omega_{0}$', '$\\frac{1}{5}\\omega_{0}$'],
+            'A',
+            '$J_0\\omega_0 = (2J_0/5)\\omega\' \\Rightarrow \\omega\' = \\frac{5}{2}\\omega_0$。'
+        ));
+        // 35
+        QUESTIONS.push(q(35,
+            '刚体绕定轴作匀变速转动时，刚体上距转轴为 $r$ 的一点（  ）',
+            ['切向加速度和法向加速度的大小均随时间变化', '切向加速度和法向加速度的大小均保持恒定',
+                '切向加速度的大小恒定，法向加速度的大小变化', '法向加速度的大小恒定，切向加速度的大小变化'
+            ],
+            'C',
+            '匀变速转动 $\\alpha$ 恒定，$a_t = \\alpha r$ 恒定；$a_n = \\omega^2 r$，$\\omega$ 随时间变化。'
+        ));
+        // 36
+        QUESTIONS.push(q(36,
+            '定轴转动的刚体运动学方程为 $\\theta = 2t^{3} + 5\\,(\\mathrm{rad})$ ，$t = 1\\,\\mathrm{s}$ 时刚体上距转轴 $0.10\\,\\mathrm{m}$ 处的点的加速度的大小为（  ）',
+            ['$3.6\\,\\mathrm{m\\cdot s^{-1}}$', '$3.8\\,\\mathrm{m\\cdot s^{-1}}$', '$1.2\\,\\mathrm{m\\cdot s^{-1}}$',
+                '$2.2\\,\\mathrm{m\\cdot s^{-1}}$'
+            ],
+            'B',
+            '$\\omega = 6t^2, \\alpha = 12t$。t=1 时 $\\omega=6,\\alpha=12$。$a_t=1.2, a_n=3.6$，$a=\\sqrt{1.2^2+3.6^2}\\approx3.8$。'
+        ));
+        // 37
+        QUESTIONS.push(q(37,
+            '一个具有单位质量的质点，其运动学方程为 $\\vec{r} = 3t^{3}\\vec{i} + 2t^{2}\\vec{j}\\,(\\mathrm{m})$ ，$t = 1\\,\\mathrm{s}$ 时该质点受到的对原点的力矩 $\\vec{M}$ 为（  ）',
+            ['$48\\vec{k}$', '$-48\\vec{k}$', '$24\\vec{k}$', '$-24\\vec{k}$'],
+            'D',
+            '$\\vec r = 3\\vec i+2\\vec j$，$\\vec a = 18\\vec i+4\\vec j$，$\\vec F = 18\\vec i+4\\vec j$。$\\vec M = \\vec r \\times \\vec F = (3)(4) - (2)(18) = -24\\vec k$。'
+        ));
+        // 38
+        QUESTIONS.push(q(38,
+            '一个具有单位质量的质点，其运动学方程为 $\\vec{r} = 2t^{2}\\vec{i} - 3\\vec{j}\\,(\\mathrm{m})$ ，$t = 1\\,\\mathrm{s}$ 时该质点受到的对原点的力矩 $\\vec{M}$ 为（  ）',
+            ['$12\\vec{k}$', '$-12\\vec{k}$', '$24\\vec{k}$', '$-24\\vec{k}$'],
+            'A',
+            '$\\vec r = 2\\vec i-3\\vec j$，$\\vec a = 4\\vec i$，$\\vec F = 4\\vec i$。$\\vec M = \\vec r \\times \\vec F = (2)(0) - (-3)(4) = 12\\vec k$。'
+        ));
+        // 39
+        QUESTIONS.push(q(39,
+            '关于刚体对轴的转动惯量，下列说法正确的是（  ）',
+            ['只取决于刚体质量，与质量的空间分布和轴的位置无关',
+                '取决于刚体的质量和质量的空间分布，与轴的位置无关',
+                '取决于刚体的质量、质量的空间分布和轴的位置', '只取决于轴的位置，与刚体的质量和质量的空间分布无关'
+            ],
+            'C',
+            '转动惯量 $J = \\sum m_i r_i^2$，与质量、分布和转轴位置均有关。'
+        ));
+        // 40
+        QUESTIONS.push(q(40,
+            '刚体定轴转动，当它的角加速度很大时，作用在刚体上的（  ）',
+            ['力一定很大', '力矩一定很大', '力矩可以为零', '无法确定'],
+            'B',
+            '由 $M = J\\alpha$，$\\alpha$ 大则力矩一定大（$J$ 不变）。'
+        ));
+        // 41
+        QUESTIONS.push(q(41,
+            '如图所示（参见复习题），在边长为 $a$ 的正方形顶点上，分别有质量为 $m$ 的 4 个质点，质点之间用轻质杆连接，通过质点 $A$ 并平行于对角线 $BD$ 的转轴的转动惯量为（  ）',
+            ['$2ma^{2}$', '$3ma^{2}$', '$4ma^{2}$', '$8ma^{2}$'],
+            'B',
+            'B、D到轴距离 $a/\\sqrt{2}$，C到轴距离 $\\sqrt{2}a$。$J = m(a^2/2 + 2a^2 + a^2/2) = 3ma^2$。'
+        ));
+        // 42
+        QUESTIONS.push(q(42,
+            '刚体定轴转动时，下列说法错误的是（  ）',
+            ['旋转平面垂直于转轴', '转动平面上各点均做圆周运动，角量相同',
+                '转动平面上各点均做圆周运动，线量相同', '定轴转动刚体上各点的角速度矢量方向均沿轴线'
+            ],
+            'C',
+            '各点角量相同，但线量 $v = \\omega r$ 与 $r$ 有关，线量不同。'
+        ));
+        // 43
+        QUESTIONS.push(q(43,
+            '刚体转动时，与转动惯量无关的因素是（  ）',
+            ['刚体的转动速度', '刚体的质量', '刚体的质量分布', '刚体的转轴位置'],
+            'A',
+            '转动惯量与质量、分布、转轴位置有关，与转动速度无关。'
+        ));
+        // 44
+        QUESTIONS.push(q(44,
+            '质量为 $m$ ，长为 $l$ 的均匀细棒，绕通过棒中心并与棒垂直的轴的转动惯量为（  ）',
+            ['$\\frac{1}{3} ml^{2}$', '$\\frac{1}{12} ml^{2}$', '$ml^{2}$', '$\\frac{1}{2} ml^{2}$'],
+            'B',
+            '均匀细棒绕中心垂直轴 $J = \\frac{1}{12}ml^2$。'
+        ));
+        // 45
+        QUESTIONS.push(q(45,
+            '质量为 $m$ ，长为 $l$ 的均匀细棒，绕通过棒一端并与棒垂直的轴的转动惯量为（  ）',
+            ['$\\frac{1}{3} ml^{2}$', '$\\frac{1}{12} ml^{2}$', '$ml^{2}$', '$\\frac{1}{2} ml^{2}$'],
+            'A',
+            '均匀细棒绕一端垂直轴 $J = \\frac{1}{3}ml^2$。'
+        ));
+        // 46
+        QUESTIONS.push(q(46,
+            '有一弹簧振子作简谐振动，振幅 $A = 2.0\\times 10^{-2}\\,\\mathrm{m}$ ，周期 $T = 1.0\\,\\mathrm{s}$ ，初相 $\\phi = \\frac{3}{4}\\pi$ 下列说法正确的是（  ）',
+            ['$x = 0.02\\cos(2\\pi t + \\frac{3}{4}\\pi)\\,(\\mathrm{m})$',
+                '$v = 0.04\\cos(2\\pi t + \\frac{3}{4}\\pi)\\,(\\mathrm{m\\cdot s^{-1}})$',
+                '$v = 0.04\\pi\\sin(2\\pi t + \\frac{3}{4}\\pi)\\,(\\mathrm{m\\cdot s^{-1}})$',
+                '$a = 0.08\\pi^{2}\\cos(2\\pi t + \\frac{3}{4}\\pi)\\,(\\mathrm{m\\cdot s^{-2}})$'
+            ],
+            'A',
+            '$\\omega = 2\\pi$，$x = A\\cos(\\omega t+\\phi) = 0.02\\cos(2\\pi t+3\\pi/4)$。'
+        ));
+        // 47
+        QUESTIONS.push(q(47,
+            '一物体做简谐振动，振动方程为 $x = A\\cos(\\omega t + \\frac{\\pi}{4})\\,(\\mathrm{m})$ ，在 $t = \\frac{T}{4}$ 时，物体的加速度为（  ）',
+            ['$-\\frac{\\sqrt{2}}{2} A\\omega^{2}$', '$\\frac{\\sqrt{2}}{2} A\\omega^{2}$',
+                '$-\\frac{\\sqrt{3}}{2} A\\omega^{2}$', '$\\frac{\\sqrt{3}}{2} A\\omega^{2}$'
+            ],
+            'B',
+            '$a = -\\omega^2 A\\cos(\\omega t+\\pi/4)$，$t=T/4$ 时 $\\omega t = \\pi/2$，$a = -\\omega^2 A\\cos(3\\pi/4) = \\frac{\\sqrt{2}}{2}A\\omega^2$。'
+        ));
+        // 48
+        QUESTIONS.push(q(48,
+            '质点作简谐振动，周期为 $T$ ，振幅为 $A$ ，当质点由平衡位置向 $x$ 轴正方向运动到 $x = A / 2$ 处的最短时间为（  ）',
+            ['$T / 3$', '$T / 8$', '$T / 12$', '$T / 16$'],
+            'C',
+            '$x = A\\sin(\\omega t)$，$A/2 = A\\sin(\\omega t)$，$\\omega t = \\pi/6$，$t = T/12$。'
+        ));
+        // 49
+        QUESTIONS.push(q(49,
+            '质点做简谐振动，周期为 $T$ ，振幅为 $A$ ，当质点由平衡位置向 $x$ 轴正方向运动到 $x = A$ 处的最短时间为（  ）',
+            ['$\\frac{T}{3}$', '$\\frac{T}{4}$', '$\\frac{T}{8}$', '$\\frac{T}{12}$'],
+            'B',
+            '$x = A\\sin(\\omega t)$，$A = A\\sin(\\omega t)$，$\\omega t = \\pi/2$，$t = T/4$。'
+        ));
+        // 50
+        QUESTIONS.push(q(50,
+            '某质量为 $m$ 的弹簧振子做简谐运动，$k$ 为弹簧劲度系数，下列描述正确的是（  ）',
+            ['振子所受回复力总是指向平衡位置', '振子的运动速度方向总是与位移方向相反',
+                '振子的角频率 $\\omega^{2} = \\sqrt{\\frac{k}{m}}$', '此简谐运动的频率 $\\nu$ 与质点质量无关'
+            ],
+            'A',
+            '回复力 $F = -kx$，总是指向平衡位置。$\\omega = \\sqrt{k/m}$，$\\nu$ 与 $m$ 有关。'
+        ));
+        // 51
+        QUESTIONS.push(q(51,
+            '一简谐运动位移与时间曲线如图所示（参见复习题），则振动周期为（  ）秒。',
+            ['2.62', '2.40', '0.42', '0.382'],
+            'B',
+            '由图读取周期约为 2.40s。'
+        ));
+        // 52
+        QUESTIONS.push(q(52,
+            '简谐运动曲线如图所示（参见复习题），则下列描述正确的是（  ）',
+            ['$A$ 点向下振动', '$B$ 点向上不动', '$C$ 点向下振动', '$D$ 点向下振动'],
+            'D',
+            '根据波形图判断，D 点向下振动。'
+        ));
+        // 53
+        QUESTIONS.push(q(53,
+            '一质点在 $x$ 轴上同时参与两独立的同频率的简谐振动，振动方程分别为 $x_{1} = 7.0\\times 10^{-2} \\cos(5\\pi t + \\frac{5}{6}\\pi)\\,(\\mathrm{m})$ ，$x_{2} = 3.0\\times 10^{-2} \\cos(5\\pi t - \\frac{1}{6}\\pi)\\,(\\mathrm{m})$ ，则其合振动的振幅为（  ）米。',
+            ['0.05', '0.03', '0.04', '0.07'],
+            'C',
+            '相位差 $\\Delta\\phi = 5\\pi/6 - (-\\pi/6) = \\pi$，合振幅 $A = |0.07-0.03| = 0.04$m。'
+        ));
+        // 54
+        QUESTIONS.push(q(54,
+            '一质点在 $x$ 轴上同时参与两个独立的同频率的简谐振动，其振动方程分别为 $x_{1} = 0.05\\cos(2\\pi t + \\frac{5\\pi}{6})\\,(\\mathrm{m}), x_{2} = 0.02\\cos(2\\pi t - \\frac{\\pi}{6})\\,(\\mathrm{m})$ ，则其合振动的振幅为（  ）',
+            ['0.02m', '0.03m', '0.05m', '0.07m'],
+            'B',
+            '$\\Delta\\phi = \\pi$，$A = |0.05-0.02| = 0.03$m。'
+        ));
+        // 55
+        QUESTIONS.push(q(55,
+            '两个同方向的简谐振动，其表达式分别为 $x_{1} = 4\\times 10^{-2}\\cos 2\\pi (t + \\frac{1}{8})\\,(\\mathrm{m})$ ，$x_{2} = 3\\times 10^{-2}\\cos 2\\pi (t + \\frac{5}{8})\\,(\\mathrm{m})$ ；则其合振动的振幅为（  ）',
+            ['0.01m', '0.02m', '0.03m', '0.07m'],
+            'A',
+            '$\\phi_1 = \\pi/4$，$\\phi_2 = 5\\pi/4$，$\\Delta\\phi = \\pi$，$A = |0.04-0.03| = 0.01$m。'
+        ));
+        // 56
+        QUESTIONS.push(q(56,
+            '有一弹簧振子，振幅 $A = 2.0\\times 10^{-2}\\,\\mathrm{m}$ ，周期 $T = 1.0\\,\\mathrm{s}$ ，初相 $\\phi = 3\\pi /4$ 。则下列错误的是（  ）',
+            ['$x = 0.02\\cos(2\\pi t + \\frac{3}{4}\\pi)\\,(\\mathrm{m})$',
+                '$v = -0.04\\pi\\sin(2\\pi t + \\frac{3}{4}\\pi)\\,(\\mathrm{m\\cdot s^{-1}})$',
+                '$a = -0.08\\pi^{2}\\sin(2\\pi t + \\frac{3}{4}\\pi)\\,(\\mathrm{m\\cdot s^{-2}})$',
+                '$a = -0.08\\pi^{2}\\cos(2\\pi t + \\frac{3}{4}\\pi)\\,(\\mathrm{m\\cdot s^{-2}})$'
+            ],
+            'C',
+            '$a = -\\omega^2 x = -0.08\\pi^2\\cos(2\\pi t+3\\pi/4)$，C 中为 $\\sin$，错误。'
+        ));
+        // 57
+        QUESTIONS.push(q(57,
+            '两个同方向的简谐振动，其表达式分别为：$x_{1} = 5.0\\times 10^{-2}\\cos(5\\pi t + \\frac{5}{6}\\pi)\\,(\\mathrm{m}), x_{2} = 3.0\\times 10^{-2}\\cos(5\\pi t - \\frac{1}{6}\\pi)\\,(\\mathrm{m})$ ，则其合振动的振幅为（  ）',
+            ['0.02m', '0.03m', '0.05m', '0.08m'],
+            'A',
+            '$\\Delta\\phi = \\pi$，$A = |0.05-0.03| = 0.02$m。'
+        ));
+        // 58
+        QUESTIONS.push(q(58,
+            '两个同方向的简谐振动曲线如图所示（参见复习题），$A_{1} = 0.05\\,\\mathrm{m}$ ，$A_{2} = 0.03\\,\\mathrm{m}$ ，其合振动的振幅为（  ）',
+            ['0.02m', '0.03m', '0.05m', '0.08m'],
+            'A',
+            '由图可知两振动反相，合振幅 $A = |A_1 - A_2| = 0.02$m。'
+        ));
+        // 59
+        QUESTIONS.push(q(59,
+            '一横波在沿绳子传播时表达式为 $y = 0.04\\cos(2.5\\pi t - \\pi x)\\,(\\mathrm{m})$ ，则此波的波速为（  ） $\\mathrm{m\\cdot s^{-1}}$',
+            ['0.04', '1.25', '2', '2.5'],
+            'D',
+            '$\\omega = 2.5\\pi, k=\\pi$，$v = \\omega/k = 2.5\\,\\mathrm{m/s}$。'
+        ));
+        // 60
+        QUESTIONS.push(q(60,
+            '一横波在沿绳子传播时表达式为 $y = 0.04\\cos(2.5\\pi t - \\pi x)\\,(\\mathrm{m})$ ，则此波的波长为（  ） $\\mathrm{m}$',
+            ['0.04', '1.25', '2', '2.5'],
+            'C',
+            '$k = 2\\pi/\\lambda = \\pi \\Rightarrow \\lambda = 2\\,\\mathrm{m}$。'
+        ));
+        // 61
+        QUESTIONS.push(q(61,
+            '一横波在沿绳子传播时的表达式为 $y = 0.04\\cos(2.5\\pi t - \\pi x)\\,(\\mathrm{m})$ ，下列选项错误的是（  ）',
+            ['振幅为 $0.04\\,\\mathrm{m}$', '频率为 $2.5\\pi$', '波速是 $2.5\\,\\mathrm{m\\cdot s^{-1}}$',
+                '波长为 $2.0\\,\\mathrm{m}$'
+            ],
+            'B',
+            '频率 $f = \\omega/(2\\pi) = 1.25\\,\\mathrm{Hz}$，不是 $2.5\\pi$。'
+        ));
+        // 62
+        QUESTIONS.push(q(62,
+            '一横波以波速 $u$ 沿 $x$ 轴负方向传播，$t$ 时刻波形曲线如图所示（参见复习题），则（  ）',
+            ['$A$ 点向下振动', '$B$ 点静止不动', '$C$ 点向下振动', '$D$ 点向上振动'],
+            'A',
+            '波沿 x 轴负方向传播，A 点向上振动。'
+        ));
+        // 63
+        QUESTIONS.push(q(63,
+            '一横波以波速 $u$ 沿 $x$ 轴负方向传播，$t$ 时刻波形曲线如上图所示（参见复习题），则（  ）',
+            ['$A$ 点振动速度大于零', '$B$ 点静止不动', '$C$ 点向下振动', '$D$ 点振动速度小于零'],
+            'D',
+            'D 点振动速度小于零（向下振动）。'
+        ));
+        // 64
+        QUESTIONS.push(q(64,
+            '一横波以波速 $u$ 沿 $x$ 轴正方向传播，$t$ 时刻波形曲线如图所示，则（  ）',
+            ['$A$ 点向下振动', '$B$ 点静止不动', '$C$ 点向上振动', '$D$ 点向上振动'],
+            'D',
+            '波沿 x 轴正方向传播，D 点向上振动。'
+        ));
+        // 65
+        QUESTIONS.push(q(65,
+            '一平面简谐波在 $t = 0\\,\\mathrm{s}$ 时的波形图如图所示（参见复习题），已知 $u = 0.08\\,\\mathrm{m\\cdot s^{-1}}$ ，此简谐波的波函数为（  ）',
+            ['$y = 0.04\\sin(0.4\\pi t + 5\\pi x + \\frac{\\pi}{2})\\,(\\mathrm{m})$',
+                '$y = 0.04\\cos(0.4\\pi t + 5\\pi x + \\frac{\\pi}{2})\\,(\\mathrm{m})$',
+                '$y = 0.04\\sin(0.4\\pi t - 5\\pi x + \\frac{\\pi}{2})\\,(\\mathrm{m})$',
+                '$y = 0.04\\cos(0.4\\pi t - 5\\pi x + \\frac{\\pi}{2})\\,(\\mathrm{m})$'
+            ],
+            'D',
+            '由图得 $\\lambda=0.4$m，$k=5\\pi$，$\\omega = uk = 0.4\\pi$，波沿 x 正方向，初相 $\\pi/2$，故选 D。'
+        ));
+        // 66
+        QUESTIONS.push(q(66,
+            '一平面简谐波的波函数为 $y = 0.03\\cos(4\\pi t - 0.05x)\\,(\\mathrm{m})$ ，该波向（  ）方向传播。',
+            ['$x$ 轴正方向', '$x$ 轴负方向', '$y$ 轴正方向', '$y$ 轴负方向'],
+            'A',
+            '波函数中 $\\omega t - kx$ 表示沿 x 轴正方向传播。'
+        ));
+        // 67
+        QUESTIONS.push(q(67,
+            '机械波在介质中传播的速度（  ）',
+            ['与波长成正比', '与频率成正比', '由介质性质决定，与频率无关', '由振源决定，与频率无关'],
+            'C',
+            '机械波速由介质性质决定，与频率无关（非色散介质）。'
+        ));
+        // 68
+        QUESTIONS.push(q(68,
+            '关于机械波描述错误的是（  ）',
+            ['波动的各质元并不随波逐流，波的传播不是质元的传播',
+                '"上游"的振动依次带动"下游"的质元的振动', '波源每完成一次全振动，就有一个完整的波形发送出去',
+                '波动曲线与振动曲线相同'
+            ],
+            'D',
+            '波动曲线是某一时刻各质元位移分布，振动曲线是某一质元位移随时间变化，二者不同。'
+        ));
+        // 69
+        QUESTIONS.push(q(69,
+            '关于下列描述错误的是（  ）',
+            ['在同一种介质中，波速是常量，而质点的振动速度是随时间和坐标变化的量',
+                '波速是振动能量或振动形式的传播，不是质点的振动速度',
+                '波速的大小由弹性介质性质决定，频率(周期)则由波源的振动特性决定',
+                '振源振动速度与波的传播速度相等'
+            ],
+            'D',
+            '振源振动速度与波速是两个不同的概念，一般不等。'
+        ));
+        // 70
+        QUESTIONS.push(q(70,
+            '关于波速，以下说法中错误的是（  ）',
+            ['振动状态传播的速度等于波速', '质点振动的速度等于波速', '相位传播的速度等于波速',
+                '机械波波速的大小由介质的性质决定'
+            ],
+            'B',
+            '质点振动速度与波速不同，波速是振动状态（相位）传播的速度。'
+        ));
+        QUESTIONS.push(q(71,
+            '一列频率为 $3000\\mathrm{Hz}$ 的声波，以 $1560\\mathrm{m}\\cdot \\mathrm{s}^{-1}$ 的传播速度沿一波线传播，这列波的波长为（  ）m。',
+            ['0.48', '0.50', '0.52', '0.54'],
+            'C',
+            '波长 $\\lambda = \\dfrac{v}{f} = \\dfrac{1560}{3000} = 0.52\\,\\mathrm{m}$。'
+        ));
+
+        QUESTIONS.push(q(72,
+            '频率为 $3000\\mathrm{Hz}$ 的声波，以 $1560\\mathrm{m}\\cdot \\mathrm{s}^{-1}$ 的速度沿一波线传播，经过波线上的 $A$ 点后再经 $\\Delta x = 0.13\\mathrm{m}$ 传至 $B$ 点。则 $A$ 、 $B$ 两点振动的相位差为（  ）rad。',
+            ['$\\dfrac{\\pi}{3}$', '$\\dfrac{\\pi}{2}$', '$\\dfrac{2\\pi}{3}$', '$\\dfrac{\\pi}{4}$'],
+            'B',
+            '由第 71 题知 $\\lambda = 0.52\\,\\mathrm{m}$，$\\Delta \\phi = \\dfrac{2\\pi}{\\lambda} \\Delta x = \\dfrac{2\\pi}{0.52} \\times 0.13 = \\dfrac{\\pi}{2}$。'
+        ));
+
+        // ============================================================
+        // 应用核心逻辑
+        // ============================================================
+        let mode = 'seq';
+        let currentIndex = 0;
+        let order = [];
+        let userAnswers = {};
+        let submitted = {};
+        let total = QUESTIONS.length;
+
+        const modeSeq = document.getElementById('modeSeq');
+        const modeRand = document.getElementById('modeRand');
+        const modeLabel = document.getElementById('modeLabel');
+        const counterLabel = document.getElementById('counterLabel');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+        const qHeader = document.getElementById('qHeader');
+        const qStem = document.getElementById('qStem');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const feedback = document.getElementById('feedback');
+        const resultBadge = document.getElementById('resultBadge');
+        const explanationText = document.getElementById('explanationText');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        function initOrder() {
+            if (mode === 'seq') {
+                order = Array.from({ length: total }, (_, i) => i);
+            } else {
+                order = Array.from({ length: total }, (_, i) => i);
+                for (let i = order.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [order[i], order[j]] = [order[j], order[i]];
+                }
+            }
+            userAnswers = {};
+            submitted = {};
+            currentIndex = 0;
+        }
+
+        function renderQuestion() {
+            const idx = order[currentIndex];
+            const q = QUESTIONS[idx];
+            if (!q) return;
+
+            qHeader.textContent = `第 ${currentIndex+1} 题（共 ${total} 题）`;
+            qStem.innerHTML = q.stem;
+
+            const labels = ['A', 'B', 'C', 'D'];
+            let html = '';
+            const selected = userAnswers[idx] || null;
+            const isSubmitted = submitted[idx] || false;
+
+            for (let i = 0; i < q.options.length; i++) {
+                let cls = 'opt-item';
+                if (selected === labels[i]) cls += ' selected';
+                if (isSubmitted) {
+                    cls += ' disabled';
+                    if (labels[i] === q.answer) cls += ' correct';
+                    if (selected === labels[i] && selected !== q.answer) cls += ' wrong';
+                }
+                html += `
+                    <div class="${cls}" data-opt="${labels[i]}" data-idx="${idx}">
+                        <span class="label">${labels[i]}.</span>
+                        <span class="content">${q.options[i]}</span>
+                    </div>
+                `;
+            }
+            optionsContainer.innerHTML = html;
+
+            if (!isSubmitted) {
+                document.querySelectorAll('.opt-item').forEach(el => {
+                    el.addEventListener('click', function(e) {
+                        const idx2 = parseInt(this.dataset.idx);
+                        const opt = this.dataset.opt;
+                        if (submitted[idx2]) return;
+                        userAnswers[idx2] = opt;
+                        renderQuestion();
+                    });
+                });
+            }
+
+            if (isSubmitted) {
+                const correct = q.answer;
+                const isCorrect = (selected === correct);
+                resultBadge.textContent = isCorrect ? '✅ 回答正确' : '❌ 回答错误';
+                resultBadge.className = 'result-badge ' + (isCorrect ? 'correct' : 'wrong');
+                explanationText.innerHTML = q.explanation;
+                feedback.className = 'feedback show';
+            } else {
+                feedback.className = 'feedback';
+            }
+
+            const answered = Object.keys(submitted).length;
+            const pct = Math.round((answered / total) * 100);
+            progressFill.style.width = pct + '%';
+            progressText.textContent = pct + '%';
+            counterLabel.textContent = `${currentIndex+1} / ${total}`;
+
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === total - 1;
+
+            if (isSubmitted) {
+                submitBtn.textContent = '✅ 已作答';
+                submitBtn.style.opacity = '0.6';
+            } else {
+                submitBtn.textContent = '📝 提交答案';
+                submitBtn.style.opacity = '1';
+            }
+
+            if (window.MathJax && MathJax.typesetPromise) {
+                MathJax.typesetPromise().catch(() => {});
+            }
+        }
+
+        function handleSubmit() {
+            const idx = order[currentIndex];
+            if (submitted[idx]) {
+                if (currentIndex < total - 1) {
+                    currentIndex++;
+                    renderQuestion();
+                }
+                return;
+            }
+            const selected = userAnswers[idx];
+            if (!selected) {
+                alert('请先选择一个选项！');
+                return;
+            }
+            submitted[idx] = true;
+            renderQuestion();
+        }
+
+        function switchMode(newMode) {
+            if (newMode === mode) return;
+            mode = newMode;
+            modeSeq.classList.toggle('active', mode === 'seq');
+            modeRand.classList.toggle('active', mode === 'rand');
+            modeLabel.textContent = mode === 'seq' ? '顺序练习' : '乱序练习';
+            initOrder();
+            renderQuestion();
+        }
+
+        function resetAll() {
+            initOrder();
+            renderQuestion();
+        }
+
+        function goPrev() {
+            if (currentIndex > 0) { currentIndex--;
+                renderQuestion(); }
+        }
+
+        function goNext() {
+            if (currentIndex < total - 1) { currentIndex++;
+                renderQuestion(); }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') goPrev();
+            else if (e.key === 'ArrowRight') goNext();
+            else if (e.key === 'Enter') handleSubmit();
+        });
+
+        modeSeq.addEventListener('click', () => switchMode('seq'));
+        modeRand.addEventListener('click', () => switchMode('rand'));
+        prevBtn.addEventListener('click', goPrev);
+        nextBtn.addEventListener('click', goNext);
+        submitBtn.addEventListener('click', handleSubmit);
+        resetBtn.addEventListener('click', resetAll);
+
+        initOrder();
+        renderQuestion();
+        console.log('✅ 大学物理刷题（重算版）已启动，共 ' + total + ' 题');
+    </script>
+</body>
+</html>>
